@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/plugin_uexsecuritykeyboard_key_icon_shift_highlighted"
+          android:state_pressed="true"/>
+    <item android:drawable="@drawable/plugin_uexsecuritykeyboard_key_icon_shift_normal"/>
+    <item android:drawable="@drawable/plugin_uexsecuritykeyboard_key_icon_shift_highlighted"
+          android:state_focused="true"/>
+    <item android:drawable="@drawable/plugin_uexsecuritykeyboard_key_icon_shift_actived"
+        android:state_activated="true"/>
+</selector>

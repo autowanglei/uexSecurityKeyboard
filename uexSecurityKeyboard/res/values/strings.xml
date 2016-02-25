@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <!--uexSecurityKeyboard-->
+    <string name="plugin_uexsecuritykeyboard_space">空 格</string>
+    <string name="plugin_uexsecuritykeyboard_done">完 成</string>
+</resources>

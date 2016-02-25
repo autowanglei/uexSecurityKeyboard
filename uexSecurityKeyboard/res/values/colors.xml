@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!--uexSecurityKeyboard-->
+    <color name="plugin_uexsecuritykeyboard_keyboard_bg">#7D7D7D</color>
+</resources>

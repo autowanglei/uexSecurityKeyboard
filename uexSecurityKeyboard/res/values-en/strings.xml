@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <!--uexSecurityKeyboard-->
+    <string name="plugin_uexsecuritykeyboard_space">Space</string>
+    <string name="plugin_uexsecuritykeyboard_done">Done</string>
+</resources>

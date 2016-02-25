@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uexplugins>
+    <plugin
+        className="org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard" uexName="uexSecurityKeyboard" >
+        <method name="open" type="1" params="id|left|top|width|height|isScrollWithWebView|defaultMode"/>
+        <method name="close" type="1" params="id"/>
+        <method name="getContent" type="1" params="id"/>
+    </plugin>
+</uexplugins>
