@@ -112,7 +112,7 @@
             android:keyLabel="123"
             android:keyWidth="20.000004%p" />
         <Key
-            android:codes="44"
+            android:codes="32"
             android:keyLabel="@string/plugin_uexsecuritykeyboard_space"
             android:keyWidth="59.999998%p" />
         <Key
