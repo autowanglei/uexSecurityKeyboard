@@ -3,28 +3,22 @@ package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.SecKeyboardView;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.DataBaseVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,7 +56,6 @@ public class EUExSecurityKeyboard extends EUExBase {
             return;
         }
         String json = params[0];
-        Log.i(TAG, "open:" + json);
 
         OpenDataVO dataVO = DataHelper.gson.fromJson(json, OpenDataVO.class);
         String id = dataVO.getId();
@@ -94,7 +87,6 @@ public class EUExSecurityKeyboard extends EUExBase {
     }
 
     public void close(String[] params) {
-        Log.i(TAG, "close:" + Arrays.toString(params));
         List<String> ids = null;
         if (params != null && params.length > 0) {
             String json = params[0];
@@ -127,7 +119,7 @@ public class EUExSecurityKeyboard extends EUExBase {
         return list;
     }
 
-    public void getContent(String[] params) {
+    public Object getContent(String[] params) {
         List<String> ids = null;
         if (params != null && params.length > 0) {
             String json = params[0];
@@ -156,6 +148,7 @@ public class EUExSecurityKeyboard extends EUExBase {
             }
         }
         callBackPluginJs(JsConst.CALLBACK_GET_CONTENT, DataHelper.gson.toJson(list));
+        return list;
     }
 
     private void callBackPluginJs(String methodName, String jsonData){

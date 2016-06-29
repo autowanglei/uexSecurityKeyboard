@@ -37,7 +37,8 @@
     function getContent(){
         var params = [1];
         var data = JSON.stringify(params);
-        uexSecurityKeyboard.getContent();
+        var result = uexSecurityKeyboard.getContent();
+        alert(JSON.stringify(result));
     }
     function closeKey(){
         var params = [1];
