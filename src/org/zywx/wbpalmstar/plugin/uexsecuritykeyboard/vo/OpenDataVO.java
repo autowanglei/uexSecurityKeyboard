@@ -12,6 +12,7 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private double height = -2;
     private int keyboardType = 0;
     private String keyboardDescription = "";
+    private boolean isScrollWithWeb = false;
 
     public int getX() {
         return (int) x;
@@ -59,5 +60,13 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
 
     public void setKeyboardDescription(String keyboardDescription) {
         this.keyboardDescription = keyboardDescription;
+    }
+
+    public boolean isScrollWithWeb() {
+        return isScrollWithWeb;
+    }
+
+    public void setIsScrollWithWeb(boolean isScrollWithWeb) {
+        this.isScrollWithWeb = isScrollWithWeb;
     }
 }

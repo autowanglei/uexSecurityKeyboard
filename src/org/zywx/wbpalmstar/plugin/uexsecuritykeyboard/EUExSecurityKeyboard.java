@@ -6,6 +6,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.AbsoluteLayout;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
@@ -14,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.SeckeyboardData;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.SecKeyboardView;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
@@ -26,7 +28,7 @@ public class EUExSecurityKeyboard extends EUExBase {
 
     private static final String BUNDLE_DATA = "data";
     public static final String TAG = "EUExSecurityKeyboard";
-    private HashMap<String, SecKeyboardView> mInputTexts = new HashMap<String, SecKeyboardView>();
+    private HashMap<String, SeckeyboardData> mInputTexts = new HashMap<String, SeckeyboardData>();
 
     public EUExSecurityKeyboard(Context context, EBrowserView eBrowserView) {
         super(context, eBrowserView);
@@ -78,11 +80,17 @@ public class EUExSecurityKeyboard extends EUExBase {
             view.setDescription(dataVO.getKeyboardDescription());
         }
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        addViewToCurrentWindow(view, layoutParams);
-
-        mInputTexts.put(id, view);
+        if (dataVO.isScrollWithWeb()){
+            AbsoluteLayout.LayoutParams param = new AbsoluteLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,
+                    0, 0);
+            addViewToWebView(view, param, TAG + dataVO.getId());
+        }else {
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            addViewToCurrentWindow(view, layoutParams);
+        }
+        mInputTexts.put(id, new SeckeyboardData(view, dataVO.isScrollWithWeb()));
 
     }
 
@@ -103,8 +111,12 @@ public class EUExSecurityKeyboard extends EUExBase {
             for (int i = 0; i < ids.size(); i++) {
                 String id = ids.get(i);
                 if (mInputTexts.containsKey(id)){
-                    SecKeyboardView view = mInputTexts.get(id);
-                    removeViewFromCurrentWindow(view);
+                    if (mInputTexts.get(id).isScrollWithWeb()){
+                        removeViewFromWebView(TAG + id);
+                    }else{
+                        SecKeyboardView view = mInputTexts.get(id).getView();
+                        removeViewFromCurrentWindow(view);
+                    }
                 }
                 mInputTexts.remove(id);
             }
@@ -138,7 +150,7 @@ public class EUExSecurityKeyboard extends EUExBase {
                 String id = ids.get(i);
                 resultVO.setId(id);
                 if (mInputTexts.containsKey(id)){
-                    EditText editText = mInputTexts.get(id).getInputEditText();
+                    EditText editText = mInputTexts.get(id).getView().getInputEditText();
                     if (editText != null){
                         String content = editText.getText().toString();
                         resultVO.setContent(content);
