@@ -29,6 +29,7 @@ public class EUExSecurityKeyboard extends EUExBase {
     private static final String BUNDLE_DATA = "data";
     public static final String TAG = "EUExSecurityKeyboard";
     private HashMap<String, SeckeyboardData> mInputTexts = new HashMap<String, SeckeyboardData>();
+    final String INVALID_CODE = "-1";
 
     public EUExSecurityKeyboard(Context context, EBrowserView eBrowserView) {
         super(context, eBrowserView);
@@ -52,20 +53,20 @@ public class EUExSecurityKeyboard extends EUExBase {
         }
     }
 
-    public void open(String[] params) {
+    public String open(String[] params) {
         if (params == null || params.length < 1) {
             errorCallback(0, 0, "error params!");
-            return;
+            return INVALID_CODE;
         }
         String json = params[0];
 
         OpenDataVO dataVO = DataHelper.gson.fromJson(json, OpenDataVO.class);
         String id = dataVO.getId();
         if (TextUtils.isEmpty(id)){
-            return;
+            id = String.valueOf(getRandomId());
         }
         if (mInputTexts.containsKey(id)){
-            return;
+            return INVALID_CODE;
         }
 
         RelativeLayout.LayoutParams fl = new RelativeLayout.LayoutParams(dataVO.getWidth(),
@@ -91,7 +92,11 @@ public class EUExSecurityKeyboard extends EUExBase {
             addViewToCurrentWindow(view, layoutParams);
         }
         mInputTexts.put(id, new SeckeyboardData(view, dataVO.isScrollWithWeb()));
+        return id;
+    }
 
+    private int getRandomId() {
+        return (int)(Math.random() * 100000);
     }
 
     public void close(String[] params) {
