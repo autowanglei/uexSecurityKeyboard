@@ -29,7 +29,7 @@ public class EUExSecurityKeyboard extends EUExBase {
     private static final String BUNDLE_DATA = "data";
     public static final String TAG = "EUExSecurityKeyboard";
     private HashMap<String, SeckeyboardData> mInputTexts = new HashMap<String, SeckeyboardData>();
-    final String INVALID_CODE = "-1";
+    final String INVALID_CODE = null;
 
     public EUExSecurityKeyboard(Context context, EBrowserView eBrowserView) {
         super(context, eBrowserView);
