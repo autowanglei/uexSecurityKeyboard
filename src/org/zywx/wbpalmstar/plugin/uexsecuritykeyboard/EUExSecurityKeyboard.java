@@ -101,6 +101,20 @@ public class EUExSecurityKeyboard extends EUExBase {
 
     public void close(String[] params) {
         List<String> ids = null;
+        //如果只传一个id, 则只删除某一个
+        if (params != null && params.length == 1 && (!TextUtils.isEmpty(params[0]) && !params[0].contains(","))) {
+            String id = params[0];
+            if (mInputTexts.containsKey(id)){
+                if (mInputTexts.get(id).isScrollWithWeb()){
+                    removeViewFromWebView(TAG + id);
+                }else{
+                    SecKeyboardView view = mInputTexts.get(id).getView();
+                    removeViewFromCurrentWindow(view);
+                }
+            }
+            mInputTexts.remove(id);
+            return;
+        }
         if (params != null && params.length > 0) {
             String json = params[0];
             ids = DataHelper.gson.fromJson(json,
