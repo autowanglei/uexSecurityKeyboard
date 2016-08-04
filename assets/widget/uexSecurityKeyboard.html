@@ -36,10 +36,8 @@
         var data = JSON.stringify(params);
         uexSecurityKeyboard.open(data);
     }
-    function getContent(){
-        var params = [1];
-        var data = JSON.stringify(params);
-        var result = uexSecurityKeyboard.getContent();
+    function getData(){
+        var result = uexSecurityKeyboard.getData("1");
         alert(JSON.stringify(result));
     }
     function closeKey(){
@@ -69,7 +67,8 @@
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <input class='btn' type='button' value='close' onclick='closeKey()'>
-        <input class='btn' type='button' value='get' onclick='getContent()'>
+
+        <input class='btn' type='button' value='get' onclick='getData()'>
     </div>
 </div>
 </body>

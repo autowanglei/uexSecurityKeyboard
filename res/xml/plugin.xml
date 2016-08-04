@@ -5,5 +5,7 @@
         <method name="open"/>
         <method name="close"/>
         <method name="getContent"/>
+        <!--4.0 接口，返回某个特定安全键盘的数据-->
+        <method name="getData"/>
     </plugin>
 </uexplugins>

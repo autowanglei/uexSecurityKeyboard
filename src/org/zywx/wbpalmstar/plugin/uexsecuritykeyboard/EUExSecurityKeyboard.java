@@ -182,6 +182,21 @@ public class EUExSecurityKeyboard extends EUExBase {
         return list;
     }
 
+    public String getData(String [] params) {
+        if (params == null || params.length < 1) {
+            return null;
+        }
+        String id = params[0];
+        if (mInputTexts.containsKey(id)){
+            EditText editText = mInputTexts.get(id).getView().getInputEditText();
+            if (editText != null){
+                String content = editText.getText().toString();
+                return content;
+            }
+        }
+        return null;
+    }
+
     private void callBackPluginJs(String methodName, String jsonData){
         String js = SCRIPT_HEADER + "if(" + methodName + "){"
                 + methodName + "('" + jsonData + "');}";
