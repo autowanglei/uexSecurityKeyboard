@@ -55,6 +55,15 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+
+        defaultConfig {
+            minSdkVersion 14
+        }
+    }
+    defaultConfig {
+        applicationId 'org.zywx.wbpalmstar.widgetone.uexSecurityKeyboard'
+    }
+    productFlavors {
     }
 }
 apply from: "https://raw.githubusercontent.com/android-plugin/gradle-plugin/master/buildPlugin.gradle"

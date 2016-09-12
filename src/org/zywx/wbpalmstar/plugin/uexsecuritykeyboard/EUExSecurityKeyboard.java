@@ -61,11 +61,11 @@ public class EUExSecurityKeyboard extends EUExBase {
         String json = params[0];
 
         OpenDataVO dataVO = DataHelper.gson.fromJson(json, OpenDataVO.class);
-        String id = dataVO.getId();
-        if (TextUtils.isEmpty(id)){
-            id = String.valueOf(getRandomId());
+        //String id = dataVO.getId();
+        if (TextUtils.isEmpty(dataVO.getId())){
+            dataVO.setId(String.valueOf(getRandomId()));
         }
-        if (mInputTexts.containsKey(id)){
+        if (mInputTexts.containsKey(dataVO.getId())){
             return INVALID_CODE;
         }
 
@@ -91,8 +91,8 @@ public class EUExSecurityKeyboard extends EUExBase {
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             addViewToCurrentWindow(view, layoutParams);
         }
-        mInputTexts.put(id, new SeckeyboardData(view, dataVO.isScrollWithWeb()));
-        return id;
+        mInputTexts.put(dataVO.getId(), new SeckeyboardData(view, dataVO.isScrollWithWeb()));
+        return dataVO.getId();
     }
 
     private int getRandomId() {
