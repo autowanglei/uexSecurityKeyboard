@@ -13,6 +13,7 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private int keyboardType = 0;
     private String keyboardDescription = "";
     private boolean isScrollWithWeb = false;
+    private boolean showClearText = true;
 
     public int getX() {
         return (int) x;
@@ -68,5 +69,13 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
 
     public void setIsScrollWithWeb(boolean isScrollWithWeb) {
         this.isScrollWithWeb = isScrollWithWeb;
+    }
+
+    public boolean isShowClearText() {
+        return showClearText;
+    }
+
+    public void setShowClearText(boolean showClearText) {
+        this.showClearText = showClearText;
     }
 }

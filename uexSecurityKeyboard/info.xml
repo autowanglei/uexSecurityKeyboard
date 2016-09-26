@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexSecurityKeyboard" version="3.0.1" build="1">
-        <info>1:新增isScrollWithWeb参数控制是否随网页滚动</info>
+        uexName="uexSecurityKeyboard" version="3.0.1.1" build="2">
+        <info>2.1:open接口新增showClearText参数控制是否显示显示明文输入。</info>
+        <build>1:新增isScrollWithWeb参数控制是否随网页滚动</build>
         <build>0:带安全键盘的输入框插件</build>
     </plugin>
 </uexplugins>
