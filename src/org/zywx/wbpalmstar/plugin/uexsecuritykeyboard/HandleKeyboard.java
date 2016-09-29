@@ -1,5 +1,13 @@
 package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard;
 
+import java.util.List;
+
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard.OnInputStatusListener;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
+
 import android.app.Activity;
 import android.content.Context;
 import android.inputmethodservice.Keyboard;
@@ -14,12 +22,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard.OnInputStatusListener;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
-
-import java.util.List;
 
 public class HandleKeyboard implements View.OnClickListener{
 
@@ -43,12 +45,17 @@ public class HandleKeyboard implements View.OnClickListener{
     private OnInputStatusListener mListener;
 
     private boolean isCustom;
+    private EUExSecurityKeyboard mEUExKeyboard;
+    private OpenDataVO dataVO;
 
-    public HandleKeyboard(Activity act, final EditText editText, RelativeLayout view, int mode) {
+    public HandleKeyboard(Activity act, EUExSecurityKeyboard mKeyboard,
+            final EditText editText, RelativeLayout view, OpenDataVO dataVO) {
 
         this.mActivity = act;
+        this.mEUExKeyboard = mKeyboard;
         this.ed = editText;
         this.mParentView = view;
+        this.dataVO = dataVO;
         this.mKeyboardView = (KeyboardView) view.findViewById(EUExUtil.getResIdID("keyboard_view"));
         this.mDone = (TextView)view.findViewById(EUExUtil.getResIdID("done"));
 
@@ -56,7 +63,7 @@ public class HandleKeyboard implements View.OnClickListener{
 
         mImm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        switch (mode){
+        switch (dataVO.getKeyboardType()) {
             case JsConst.KEYBOARD_MODE_CUSTOM:
                 isCustom = true;
                 letters = new Keyboard(mActivity, EUExUtil
@@ -178,13 +185,14 @@ public class HandleKeyboard implements View.OnClickListener{
             Editable editable = ed.getText();
             int start = ed.getSelectionStart();
             if (primaryCode == Keyboard.KEYCODE_DONE){
-                hideKeyboard(true);
+                onKeyDonePress();
             }else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
                 if (editable != null && editable.length() > 0) {
                     if (start > 0) {
                         editable.delete(start - 1, start);
                     }
                 }
+                cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_DEL);
             } else if (primaryCode == Keyboard.KEYCODE_SHIFT) {// 大小写切换
                 changeKey();
                 mKeyboardView.setKeyboard(letters);
@@ -197,6 +205,7 @@ public class HandleKeyboard implements View.OnClickListener{
                 mKeyboardView.setKeyboard(letters);
             } else {
                 editable.insert(start, Character.toString((char) primaryCode));
+                cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_TEXT);
             }
         }
     };
@@ -240,6 +249,27 @@ public class HandleKeyboard implements View.OnClickListener{
         }
     }
 
+    /**
+     * INPUT_TYPE_DONE，输入完成时，回调处理
+     */
+    private void onKeyDonePress() {
+        hideKeyboard(true);
+        if (!dataVO.isShowInputBox() && mEUExKeyboard != null) {
+            mEUExKeyboard.onKeyPress(ConstantUtil.INPUT_TYPE_DONE);
+        }
+    }
+
+    /**
+     * INPUT_TYPE_TEXT = 0; INPUT_TYPE_DEL = 1时，回调处理
+     * 
+     * @param inputType
+     */
+    private void cbKeyPressToWeb(int inputType) {
+        if (!dataVO.isShowInputBox() && mEUExKeyboard != null) {
+            mEUExKeyboard.onKeyPress(inputType);
+        }
+    }
+
     public void hideKeyboard(boolean isDone) {
         int visibility = mParentView.getVisibility();
         if (visibility == View.VISIBLE) {
@@ -267,7 +297,7 @@ public class HandleKeyboard implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if (v == mDone){
-            hideKeyboard(true);
+            onKeyDonePress();
         }
     }
 }

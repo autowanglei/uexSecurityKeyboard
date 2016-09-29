@@ -14,6 +14,7 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private String keyboardDescription = "";
     private boolean isScrollWithWeb = false;
     private boolean showClearText = true;
+    private boolean showInputBox = true;
 
     public int getX() {
         return (int) x;
@@ -77,5 +78,13 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
 
     public void setShowClearText(boolean showClearText) {
         this.showClearText = showClearText;
+    }
+
+    public boolean isShowInputBox() {
+        return showInputBox;
+    }
+
+    public void setShowInputBox(boolean showInputBox) {
+        this.showInputBox = showInputBox;
     }
 }

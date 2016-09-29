@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
@@ -75,8 +77,8 @@ public class EUExSecurityKeyboard extends EUExBase {
         fl.leftMargin = dataVO.getX();
         fl.topMargin = dataVO.getY();
 
-        SecKeyboardView view = new SecKeyboardView(mContext, fl,
-                dataVO);
+        SecKeyboardView view = new SecKeyboardView(mContext, this,
+                fl, dataVO);
         view.setOnInputStatusListener(new InputStatusListener(dataVO.getId()));
         if (!TextUtils.isEmpty(dataVO.getKeyboardDescription())){
             view.setDescription(dataVO.getKeyboardDescription());
@@ -163,6 +165,16 @@ public class EUExSecurityKeyboard extends EUExBase {
             }
         }
         callBackPluginJs(JsConst.CALLBACK_GET_CONTENT, DataHelper.gson.toJson(list));
+    }
+
+    public void onKeyPress(int type) {
+        JSONObject onKeyPressJson = new JSONObject();
+        try {
+            onKeyPressJson.put("inputType", type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        callBackPluginJs(JsConst.ON_KEY_PRESS, onKeyPressJson.toString());
     }
 
     private void callBackPluginJs(String methodName, String jsonData){
