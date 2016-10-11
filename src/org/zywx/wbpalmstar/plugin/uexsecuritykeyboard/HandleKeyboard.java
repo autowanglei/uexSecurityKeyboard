@@ -23,7 +23,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HandleKeyboard implements View.OnClickListener{
+public class HandleKeyboard implements View.OnClickListener {
 
     private Activity mActivity;
 
@@ -33,11 +33,11 @@ public class HandleKeyboard implements View.OnClickListener{
     private KeyboardView mKeyboardView;
     private Keyboard letters;// 字母键盘
     private Keyboard numbers;// 数字键盘
-    private Keyboard symbols;//符号键盘
+    private Keyboard symbols;// 符号键盘
 
-    private Keyboard onlyNumbers;//纯数字键盘
+    private Keyboard onlyNumbers;// 纯数字键盘
 
-    private TextView mDone;//完成
+    private TextView mDone;// 完成
 
     private EditText ed;
     private RelativeLayout mParentView;
@@ -47,6 +47,7 @@ public class HandleKeyboard implements View.OnClickListener{
     private boolean isCustom;
     private EUExSecurityKeyboard mEUExKeyboard;
     private OpenDataVO dataVO;
+    private int maxInputLength;
 
     public HandleKeyboard(Activity act, EUExSecurityKeyboard mKeyboard,
             final EditText editText, RelativeLayout view, OpenDataVO dataVO) {
@@ -56,35 +57,38 @@ public class HandleKeyboard implements View.OnClickListener{
         this.ed = editText;
         this.mParentView = view;
         this.dataVO = dataVO;
-        this.mKeyboardView = (KeyboardView) view.findViewById(EUExUtil.getResIdID("keyboard_view"));
-        this.mDone = (TextView)view.findViewById(EUExUtil.getResIdID("done"));
+        this.maxInputLength = dataVO.getMaxInputLength();
+        this.mKeyboardView = (KeyboardView) view
+                .findViewById(EUExUtil.getResIdID("keyboard_view"));
+        this.mDone = (TextView) view.findViewById(EUExUtil.getResIdID("done"));
 
         mDone.setOnClickListener(this);
 
-        mImm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mImm = (InputMethodManager) mActivity
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
 
         switch (dataVO.getKeyboardType()) {
-            case JsConst.KEYBOARD_MODE_CUSTOM:
-                isCustom = true;
-                letters = new Keyboard(mActivity, EUExUtil
-                        .getResXmlID("plugin_uexsecuritykeyboard_letters"));
-                numbers = new Keyboard(mActivity, EUExUtil
-                        .getResXmlID("plugin_uexsecuritykeyboard_numbers"));
-                symbols = new Keyboard(mActivity, EUExUtil
-                        .getResXmlID("plugin_uexsecuritykeyboard_symbols"));
-                mKeyboardView.setKeyboard(letters);
-                mDone.setVisibility(View.VISIBLE);
-                break;
-            case JsConst.KEYBOARD_MODE_NUMBER:
-                isCustom = true;
-                onlyNumbers = new Keyboard(mActivity, EUExUtil
-                        .getResXmlID("plugin_uexsecuritykeyboard_only_numbers"));
-                mKeyboardView.setKeyboard(onlyNumbers);
-                mDone.setVisibility(View.GONE);
-                break;
-            case JsConst.KEYBOARD_MODE_DEFAULT:
-                isCustom = false;
-                break;
+        case JsConst.KEYBOARD_MODE_CUSTOM:
+            isCustom = true;
+            letters = new Keyboard(mActivity,
+                    EUExUtil.getResXmlID("plugin_uexsecuritykeyboard_letters"));
+            numbers = new Keyboard(mActivity,
+                    EUExUtil.getResXmlID("plugin_uexsecuritykeyboard_numbers"));
+            symbols = new Keyboard(mActivity,
+                    EUExUtil.getResXmlID("plugin_uexsecuritykeyboard_symbols"));
+            mKeyboardView.setKeyboard(letters);
+            mDone.setVisibility(View.VISIBLE);
+            break;
+        case JsConst.KEYBOARD_MODE_NUMBER:
+            isCustom = true;
+            onlyNumbers = new Keyboard(mActivity, EUExUtil
+                    .getResXmlID("plugin_uexsecuritykeyboard_only_numbers"));
+            mKeyboardView.setKeyboard(onlyNumbers);
+            mDone.setVisibility(View.GONE);
+            break;
+        case JsConst.KEYBOARD_MODE_DEFAULT:
+            isCustom = false;
+            break;
         }
         mKeyboardView.setEnabled(true);
         mKeyboardView.setPreviewEnabled(false);
@@ -96,7 +100,7 @@ public class HandleKeyboard implements View.OnClickListener{
                 if (!b && isCustom) {
                     hideKeyboard(false);
                 } else {
-                    mImm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
+                    mImm.hideSoftInputFromWindow(view.getWindowToken(), 0); // 强制隐藏键盘
                 }
             }
         });
@@ -104,7 +108,7 @@ public class HandleKeyboard implements View.OnClickListener{
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (isCustom){
+                if (isCustom) {
                     int inputType = editText.getInputType();
                     hideSoftInputMethod(editText);
                     showKeyboard();
@@ -140,7 +144,8 @@ public class HandleKeyboard implements View.OnClickListener{
             Class<TextView> cls = TextView.class;
             java.lang.reflect.Method setShowSoftInputOnFocus;
             try {
-                setShowSoftInputOnFocus = cls.getMethod(methodName, boolean.class);
+                setShowSoftInputOnFocus = cls.getMethod(methodName,
+                        boolean.class);
                 setShowSoftInputOnFocus.setAccessible(true);
                 setShowSoftInputOnFocus.invoke(this, false);
             } catch (Exception e) {
@@ -184,9 +189,9 @@ public class HandleKeyboard implements View.OnClickListener{
         public void onKey(int primaryCode, int[] keyCodes) {
             Editable editable = ed.getText();
             int start = ed.getSelectionStart();
-            if (primaryCode == Keyboard.KEYCODE_DONE){
+            if (primaryCode == Keyboard.KEYCODE_DONE) {
                 onKeyDonePress();
-            }else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
+            } else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
                 if (editable != null && editable.length() > 0) {
                     if (start > 0) {
                         editable.delete(start - 1, start);
@@ -201,11 +206,15 @@ public class HandleKeyboard implements View.OnClickListener{
                 mKeyboardView.setKeyboard(numbers);
             } else if (primaryCode == JsConst.KEYCODE_CHANGE_SYMBOL) {// 符号切换
                 mKeyboardView.setKeyboard(symbols);
-            }else if (primaryCode == JsConst.KEYCODE_CHANGE_LETTER) {// 字母切换
+            } else if (primaryCode == JsConst.KEYCODE_CHANGE_LETTER) {// 字母切换
                 mKeyboardView.setKeyboard(letters);
             } else {
-                editable.insert(start, Character.toString((char) primaryCode));
-                cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_TEXT);
+                if ((maxInputLength < 0)
+                        || (editable.length() < dataVO.getMaxInputLength())) {
+                    editable.insert(start,
+                            Character.toString((char) primaryCode));
+                    cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_TEXT);
+                }
             }
         }
     };
@@ -215,28 +224,30 @@ public class HandleKeyboard implements View.OnClickListener{
      */
     private void changeKey() {
         List<Key> keyList = letters.getKeys();
-        if (isUpper) {//大写切换小写
+        if (isUpper) {// 大写切换小写
             isUpper = false;
             for (Key key : keyList) {
                 if (key.label != null && isWord(key.label.toString())) {
                     key.label = key.label.toString().toLowerCase();
                     key.codes[0] = key.codes[0] + 32;
                 }
-                if (key.codes[0] == -1){
-                    key.icon = mActivity.getResources().getDrawable(EUExUtil
-                            .getResDrawableID("plugin_uexsecuritykeyboard_key_icon_shift_normal"));
+                if (key.codes[0] == -1) {
+                    key.icon = mActivity.getResources()
+                            .getDrawable(EUExUtil.getResDrawableID(
+                                    "plugin_uexsecuritykeyboard_key_icon_shift_normal"));
                 }
             }
-        } else {//小写切换大写
+        } else {// 小写切换大写
             isUpper = true;
             for (Key key : keyList) {
                 if (key.label != null && isWord(key.label.toString())) {
                     key.label = key.label.toString().toUpperCase();
                     key.codes[0] = key.codes[0] - 32;
                 }
-                if (key.codes[0] == -1){
-                    key.icon = mActivity.getResources().getDrawable(EUExUtil
-                            .getResDrawableID("plugin_uexsecuritykeyboard_key_icon_shift_highlighted"));
+                if (key.codes[0] == -1) {
+                    key.icon = mActivity.getResources()
+                            .getDrawable(EUExUtil.getResDrawableID(
+                                    "plugin_uexsecuritykeyboard_key_icon_shift_highlighted"));
                 }
             }
         }
@@ -275,10 +286,10 @@ public class HandleKeyboard implements View.OnClickListener{
         if (visibility == View.VISIBLE) {
             ResultVO resultVO = new ResultVO();
             resultVO.setContent(ed.getText().toString());
-            if (mListener != null){
-                if (isDone){
+            if (mListener != null) {
+                if (isDone) {
                     mListener.onInputCompleted(resultVO);
-                }else{
+                } else {
                     mListener.onKeyboardDismiss(resultVO);
                 }
             }
@@ -296,7 +307,7 @@ public class HandleKeyboard implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if (v == mDone){
+        if (v == mDone) {
             onKeyDonePress();
         }
     }

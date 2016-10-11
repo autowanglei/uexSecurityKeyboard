@@ -15,6 +15,7 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private boolean isScrollWithWeb = false;
     private boolean showClearText = true;
     private boolean showInputBox = true;
+    private int maxInputLength = -1;
 
     public int getX() {
         return (int) x;
@@ -86,5 +87,13 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
 
     public void setShowInputBox(boolean showInputBox) {
         this.showInputBox = showInputBox;
+    }
+
+    public int getMaxInputLength() {
+        return maxInputLength;
+    }
+
+    public void setMaxInputLength(int maxInputLength) {
+        this.maxInputLength = maxInputLength;
     }
 }
