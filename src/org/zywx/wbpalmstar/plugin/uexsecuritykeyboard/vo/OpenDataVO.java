@@ -16,6 +16,7 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private boolean showClearText = true;
     private boolean showInputBox = true;
     private int maxInputLength = -1;
+    private String hintText = "";
 
     public int getX() {
         return (int) x;
@@ -95,5 +96,13 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
 
     public void setMaxInputLength(int maxInputLength) {
         this.maxInputLength = maxInputLength;
+    }
+
+    public String getHintText() {
+        return hintText;
+    }
+
+    public void setHintText(String hintText) {
+        this.hintText = hintText;
     }
 }

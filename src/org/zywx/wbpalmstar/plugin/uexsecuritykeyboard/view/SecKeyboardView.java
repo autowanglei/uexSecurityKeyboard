@@ -9,6 +9,7 @@ import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import android.app.Activity;
 import android.content.Context;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -53,6 +54,9 @@ public class SecKeyboardView extends FrameLayout {
             if (!dataVO.isShowClearText()) {
                 inputEditText.setInputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            }
+            if (!TextUtils.isEmpty(dataVO.getHintText())) {
+                inputEditText.setHint(dataVO.getHintText());
             }
         } else {
             inputEditText.setVisibility(View.INVISIBLE);

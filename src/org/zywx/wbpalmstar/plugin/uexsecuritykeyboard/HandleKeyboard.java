@@ -129,30 +129,36 @@ public class HandleKeyboard implements View.OnClickListener {
     private void hideSoftInputMethod(EditText et) {
         int currentVersion = android.os.Build.VERSION.SDK_INT;
         String methodName = null;
-        if (currentVersion >= 16) {
-            // 4.2
-            methodName = "setShowSoftInputOnFocus";
-            // 19 setShowSoftInputOnFocus
-        } else if (currentVersion >= 14) {
-            // 4.0
-            methodName = "setSoftInputShownOnFocus";
-        }
-
-        if (methodName == null) {
+        /** 4.0及以下 */
+        if (currentVersion <= 14) {
             et.setInputType(InputType.TYPE_NULL);
         } else {
-            Class<TextView> cls = TextView.class;
-            java.lang.reflect.Method setShowSoftInputOnFocus;
-            try {
-                setShowSoftInputOnFocus = cls.getMethod(methodName,
-                        boolean.class);
-                setShowSoftInputOnFocus.setAccessible(true);
-                setShowSoftInputOnFocus.invoke(this, false);
-            } catch (Exception e) {
-                et.setInputType(InputType.TYPE_NULL);
-                e.printStackTrace();
-            }
+            et.setShowSoftInputOnFocus(false);
         }
+        // if (currentVersion >= 16) {
+        // // 4.2
+        // methodName = "setShowSoftInputOnFocus";
+        // // 19 setShowSoftInputOnFocus
+        // } else if (currentVersion >= 14) {
+        // // 4.0
+        // methodName = "setSoftInputShownOnFocus";
+        // }
+        //
+        // if (methodName == null) {
+        // et.setInputType(InputType.TYPE_NULL);
+        // } else {
+        // Class<TextView> cls = TextView.class;
+        // java.lang.reflect.Method setShowSoftInputOnFocus;
+        // try {
+        // setShowSoftInputOnFocus = cls.getMethod(methodName,
+        // boolean.class);
+        // setShowSoftInputOnFocus.setAccessible(true);
+        // setShowSoftInputOnFocus.invoke(this, false);
+        // } catch (Exception e) {
+        // et.setInputType(InputType.TYPE_NULL);
+        // e.printStackTrace();
+        // }
+        // }
     }
 
     private OnKeyboardActionListener listener = new OnKeyboardActionListener() {
@@ -265,7 +271,7 @@ public class HandleKeyboard implements View.OnClickListener {
      */
     private void onKeyDonePress() {
         hideKeyboard(true);
-        if (!dataVO.isShowInputBox() && mEUExKeyboard != null) {
+        if (mEUExKeyboard != null) {
             mEUExKeyboard.onKeyPress(ConstantUtil.INPUT_TYPE_DONE);
         }
     }

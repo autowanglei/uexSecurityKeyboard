@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexSecurityKeyboard" version="3.0.1.3" build="2">
+        uexName="uexSecurityKeyboard" version="3.0.1.5" build="2">
         <info>2.1:open接口新增showClearText参数控制是否显示显示明文输入。
                 2.open接口新增showInputBox参数，配置插件是否显示输入框；添加onKeyPress监听。
-                3.open接口新增参数,增加设置键盘输入最大位数的功能。</info>
+                3.open接口新增参数,增加设置键盘输入最大位数的功能。
+                4.修复完成按钮无回调的问题。
+                5.修复三星手机不隐藏系统键盘的问题;添加配置输入框提示语的功能。</info>
         <build>1:新增isScrollWithWeb参数控制是否随网页滚动</build>
         <build>0:带安全键盘的输入框插件</build>
     </plugin>

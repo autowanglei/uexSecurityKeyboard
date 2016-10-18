@@ -14,11 +14,12 @@
             y:450,
             width:800,
             height:150,
-            keyboardType:0,
+            keyboardType:1,
             isScrollWithWeb:true,
             keyboardDescription:"正益移动安全输入",
             showClearText:false,
-            showInputBox:true
+            showInputBox:true,
+            hintText:" "
         };
         var data = JSON.stringify(params);
         uexSecurityKeyboard.open(data);
