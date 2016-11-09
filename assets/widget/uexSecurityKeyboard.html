@@ -61,6 +61,8 @@
         if(type == 0){
             uexSecurityKeyboard.cbGetContent = cbGetContent;
             uexSecurityKeyboard.onKeyPress = onKeyPress;
+            uexSecurityKeyboard.onShowKeyboard = onShowKeyboard;
+            uexSecurityKeyboard.onHideKeyboard = onHideKeyboard;
         }
     }
     function cbGetContent(info){
@@ -68,6 +70,14 @@
     }
     function onKeyPress(info){
         alert('onKeyPress: '+info);
+    }
+    
+    function onShowKeyboard(info){
+        alert('onShowKeyboard: '+info);
+    }
+    
+    function onHideKeyboard(info){
+        alert('onHideKeyboard: '+info);
     }
 
     </script>

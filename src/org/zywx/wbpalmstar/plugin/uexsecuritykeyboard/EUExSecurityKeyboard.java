@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.SeckeyboardData;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.SecKeyboardView;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
@@ -170,11 +171,24 @@ public class EUExSecurityKeyboard extends EUExBase {
     public void onKeyPress(int type) {
         JSONObject onKeyPressJson = new JSONObject();
         try {
-            onKeyPressJson.put("inputType", type);
+            onKeyPressJson.put(ConstantUtil.JK_INPUT_TYPE, type);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         callBackPluginJs(JsConst.ON_KEY_PRESS, onKeyPressJson.toString());
+    }
+
+    public void onKeyboardVisibilityChange(String id, int visibility) {
+        JSONObject onKeyPressJson = new JSONObject();
+        try {
+            onKeyPressJson.put(ConstantUtil.JK_KEY_BORAD_ID, id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        callBackPluginJs(
+                (ConstantUtil.KEY_BORAD_VISIBLE == visibility)
+                        ? JsConst.ON_SHOW_KEY_BOARD : JsConst.ON_HIDE_KEY_BOARD,
+                onKeyPressJson.toString());
     }
 
     private void callBackPluginJs(String methodName, String jsonData){

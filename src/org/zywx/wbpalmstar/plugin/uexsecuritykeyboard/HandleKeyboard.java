@@ -263,6 +263,8 @@ public class HandleKeyboard implements View.OnClickListener {
         int visibility = mParentView.getVisibility();
         if (visibility == View.GONE || visibility == View.INVISIBLE) {
             mParentView.setVisibility(View.VISIBLE);
+            mEUExKeyboard.onKeyboardVisibilityChange(dataVO.getId(),
+                    ConstantUtil.KEY_BORAD_VISIBLE);
         }
     }
 
@@ -300,6 +302,8 @@ public class HandleKeyboard implements View.OnClickListener {
                 }
             }
             mParentView.setVisibility(View.INVISIBLE);
+            mEUExKeyboard.onKeyboardVisibilityChange(dataVO.getId(),
+                    ConstantUtil.KEY_BORAD_INVISIBLE);
         }
     }
 
