@@ -4,10 +4,12 @@ import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard.OnInputStatusListener;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.HandleKeyboard;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -32,10 +34,10 @@ public class SecKeyboardView extends FrameLayout {
             RelativeLayout.LayoutParams lp, OpenDataVO dataVO) {
         super(context);
         this.mContext = context;
-        initView(mKeyboard, lp, dataVO);
+        initView(context, mKeyboard, lp, dataVO);
     }
 
-    private void initView(EUExSecurityKeyboard mKeyboard,
+    private void initView(Context context, EUExSecurityKeyboard mKeyboard,
             RelativeLayout.LayoutParams lp, OpenDataVO dataVO) {
         LayoutInflater.from(mContext).inflate(
                 EUExUtil.getResLayoutID(
@@ -48,12 +50,27 @@ public class SecKeyboardView extends FrameLayout {
         mDescription = (TextView) this
                 .findViewById(EUExUtil.getResIdID("keyboard_description"));
         inputEditText.setLayoutParams(lp);
-        mKey = new HandleKeyboard((Activity) mContext, mKeyboard, inputEditText,
+        mKey = new HandleKeyboard((Activity) context, mKeyboard, inputEditText,
                 view, dataVO);
         if (dataVO.isShowInputBox()) {
             if (!dataVO.isShowClearText()) {
                 inputEditText.setInputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            }
+            if (!TextUtils.isEmpty(dataVO.getBackgroundColor())) {
+                inputEditText.setBackgroundColor(
+                        Color.parseColor(dataVO.getBackgroundColor()));
+            }
+            if (!TextUtils.isEmpty(dataVO.getTextColor())) {
+                inputEditText.setBackgroundColor(
+                        Color.parseColor(dataVO.getTextColor()));
+            }
+            if (ConstantUtil.DEF_INPUT_TEXT_SIZE != dataVO.getTextSize()) {
+                inputEditText.setTextSize(dataVO.getTextSize());
+            }
+            if (!TextUtils.isEmpty(dataVO.getHintTextColor())) {
+                inputEditText.setHintTextColor(
+                        Color.parseColor(dataVO.getHintTextColor()));
             }
             if (!TextUtils.isEmpty(dataVO.getHintText())) {
                 inputEditText.setHint(dataVO.getHintText());

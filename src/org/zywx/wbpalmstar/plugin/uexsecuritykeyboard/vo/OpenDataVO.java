@@ -17,6 +17,11 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private boolean showInputBox = true;
     private int maxInputLength = -1;
     private String hintText = "";
+    private int textSize = -1;
+    private String textColor;
+    private String hintTextColor;
+    /** *输入框背景颜色 */
+    private String backgroundColor;
 
     public int getX() {
         return (int) x;
@@ -104,5 +109,37 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
 
     public void setHintText(String hintText) {
         this.hintText = hintText;
+    }
+
+    public int getTextSize() {
+        return textSize;
+    }
+
+    public String getTextColor() {
+        return textColor;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setTextSize(int textSize) {
+        this.textSize = textSize;
+    }
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public String getHintTextColor() {
+        return hintTextColor;
+    }
+
+    public void setHintTextColor(String hintTextColor) {
+        this.hintTextColor = hintTextColor;
     }
 }

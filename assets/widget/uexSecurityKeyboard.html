@@ -18,7 +18,7 @@
             isScrollWithWeb:true,
             keyboardDescription:"正益移动安全输入",
             showClearText:false,
-            showInputBox:true,
+            showInputBox:false,
             hintText:"sss"
         };
         var data = JSON.stringify(params);
@@ -35,8 +35,13 @@
             keyboardType:1,
             isScrollWithWeb:false,
             keyboardDescription:"正益移动安全输入",
-            showInputBox:false,
-            maxInputLength:4
+            showInputBox:true,
+            maxInputLength:4,
+            textColor:"#00ff00",
+            hintTextColor:"#ffff00",
+            backgroundColor:"#ff0000",
+            textSize:14,
+            hintText:"sss"
         };
         var data = JSON.stringify(params);
         uexSecurityKeyboard.open(data);
@@ -74,6 +79,7 @@
     <div class="consj">
         <input class='btn' type='button' value='open1' onclick='openKey()'>
         <input class='btn' type='button' value='open2' onclick='openKey1()'>
+        <br><br><br><br><br><br>
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <input class='btn' type='button' value='close' onclick='closeKey()'>
