@@ -15,6 +15,8 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private boolean isScrollWithWeb = false;
     private boolean showClearText = true;
     private boolean showInputBox = true;
+    private boolean showClickEffect = true;
+    private boolean isRandom = false;
     private int maxInputLength = -1;
     private String hintText = "";
     private int textSize = -1;
@@ -141,5 +143,21 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
 
     public void setHintTextColor(String hintTextColor) {
         this.hintTextColor = hintTextColor;
+    }
+
+    public boolean isShowClickEffect() {
+        return showClickEffect;
+    }
+
+    public void setShowClickEffect(boolean showClickEffect) {
+        this.showClickEffect = showClickEffect;
+    }
+
+    public boolean isRandom() {
+        return isRandom;
+    }
+
+    public void setIsRandom(boolean isRandom) {
+        this.isRandom = isRandom;
     }
 }

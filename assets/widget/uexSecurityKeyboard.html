@@ -18,8 +18,9 @@
             isScrollWithWeb:true,
             keyboardDescription:"正益移动安全输入",
             showClearText:false,
-            showInputBox:false,
-            hintText:"sss"
+            showInputBox:true,
+            showClickEffect:true,
+            hintText:"全键盘"
         };
         var data = JSON.stringify(params);
         uexSecurityKeyboard.open(data);
@@ -32,16 +33,14 @@
             y:600,
             width:800,
             height:150,
-            keyboardType:1,
+            keyboardType:0,
             isScrollWithWeb:false,
             keyboardDescription:"正益移动安全输入",
             showInputBox:true,
-            maxInputLength:4,
-            textColor:"#00ff00",
-            hintTextColor:"#ffff00",
-            backgroundColor:"#ff0000",
+            isRandom:true,
             textSize:14,
-            hintText:"sss"
+            showClickEffect:false,
+            hintText:"数字键盘"
         };
         var data = JSON.stringify(params);
         uexSecurityKeyboard.open(data);

@@ -2,8 +2,9 @@ package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view;
 
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard.OnInputStatusListener;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.HandleKeyboard;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.InputStatusListener;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.OnInputStatusListener;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 
@@ -15,11 +16,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class SecKeyboardView extends FrameLayout {
+public class SecKeyboardView extends SecurityKeyBoardBaseView {
 
     private Context mContext;
     private HandleKeyboard mKey;
@@ -31,24 +31,31 @@ public class SecKeyboardView extends FrameLayout {
     }
 
     public SecKeyboardView(Context context, EUExSecurityKeyboard mKeyboard,
-            RelativeLayout.LayoutParams lp, OpenDataVO dataVO) {
+            InputStatusListener mInputStatusListener,
+            RelativeLayout.LayoutParams inputEditLp, OpenDataVO dataVO) {
         super(context);
         this.mContext = context;
-        initView(context, mKeyboard, lp, dataVO);
+        this.setOnInputStatusListener(mInputStatusListener);
+        initView(context, mKeyboard, inputEditLp, dataVO);
     }
 
     private void initView(Context context, EUExSecurityKeyboard mKeyboard,
             RelativeLayout.LayoutParams lp, OpenDataVO dataVO) {
-        LayoutInflater.from(mContext).inflate(
-                EUExUtil.getResLayoutID(
-                        "plugin_uexsecuritykeyboard_keyboard_layout"),
-                this, true);
+        String resLayoutId = "plugin_uexsecuritykeyboard_keyboard_layout";
+        if (!dataVO.isShowClickEffect()) {
+            resLayoutId = "plugin_uexsecuritykeyboard_keyboard_layout_no_click_effect";
+        }
+        LayoutInflater.from(mContext)
+                .inflate(EUExUtil.getResLayoutID(resLayoutId), this, true);
         RelativeLayout view = (RelativeLayout) this
                 .findViewById(EUExUtil.getResIdID("parentView"));
         inputEditText = (EditText) this
                 .findViewById(EUExUtil.getResIdID("password_edit"));
         mDescription = (TextView) this
                 .findViewById(EUExUtil.getResIdID("keyboard_description"));
+        if (!TextUtils.isEmpty(dataVO.getKeyboardDescription())) {
+            mDescription.setText(dataVO.getKeyboardDescription());
+        }
         inputEditText.setLayoutParams(lp);
         mKey = new HandleKeyboard((Activity) context, mKeyboard, inputEditText,
                 view, dataVO);
@@ -91,9 +98,9 @@ public class SecKeyboardView extends FrameLayout {
         return inputEditText;
     }
 
-    public void setDescription(String description) {
-        if (mDescription != null) {
-            mDescription.setText(description);
-        }
-    }
+    // public void setDescription(String description) {
+    // if (mDescription != null) {
+    // mDescription.setText(description);
+    // }
+    // }
 }

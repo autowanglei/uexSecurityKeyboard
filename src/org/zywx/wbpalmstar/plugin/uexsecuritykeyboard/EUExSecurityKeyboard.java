@@ -12,7 +12,9 @@ import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.SeckeyboardData;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.RandomKeyboardView;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.SecKeyboardView;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.SecurityKeyBoardBaseView;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
 
@@ -45,14 +47,14 @@ public class EUExSecurityKeyboard extends EUExBase {
 
     @Override
     public void onHandleMessage(Message message) {
-        if(message == null){
+        if (message == null) {
             return;
         }
-        Bundle bundle=message.getData();
+        Bundle bundle = message.getData();
         switch (message.what) {
 
         default:
-                super.onHandleMessage(message);
+            super.onHandleMessage(message);
         }
     }
 
@@ -66,36 +68,47 @@ public class EUExSecurityKeyboard extends EUExBase {
 
         OpenDataVO dataVO = DataHelper.gson.fromJson(json, OpenDataVO.class);
         String id = dataVO.getId();
-        if (TextUtils.isEmpty(id)){
+        if (TextUtils.isEmpty(id)) {
             return;
         }
-        if (mInputTexts.containsKey(id)){
+        if (mInputTexts.containsKey(id)) {
             return;
         }
 
-        RelativeLayout.LayoutParams fl = new RelativeLayout.LayoutParams(dataVO.getWidth(),
-                dataVO.getHeight());
-        fl.leftMargin = dataVO.getX();
-        fl.topMargin = dataVO.getY();
-
-        SecKeyboardView view = new SecKeyboardView(mContext, this,
-                fl, dataVO);
-        view.setOnInputStatusListener(new InputStatusListener(dataVO.getId()));
-        if (!TextUtils.isEmpty(dataVO.getKeyboardDescription())){
-            view.setDescription(dataVO.getKeyboardDescription());
+        RelativeLayout.LayoutParams inputEditLpRl = new RelativeLayout.LayoutParams(
+                dataVO.getWidth(), dataVO.getHeight());
+        inputEditLpRl.leftMargin = dataVO.getX();
+        inputEditLpRl.topMargin = dataVO.getY();
+        SecurityKeyBoardBaseView view = null;
+        /** 乱序、数字键盘 */
+        if (dataVO.isRandom() && (ConstantUtil.KEYBOARD_MODE_NUMBER == dataVO
+                .getKeyboardType())) {
+            view = new RandomKeyboardView(mContext, this,
+                    new InputStatusListener(dataVO.getId()), inputEditLpRl,
+                    dataVO);
+        } else {
+            view = new SecKeyboardView(mContext, this,
+                    new InputStatusListener(dataVO.getId()), inputEditLpRl,
+                    dataVO);
         }
+        // view.setOnInputStatusListener();
+        // if (!TextUtils.isEmpty(dataVO.getKeyboardDescription())) {
+        // view.setDescription(dataVO.getKeyboardDescription());
+        // }
 
-        if (dataVO.isScrollWithWeb()){
+        if (dataVO.isScrollWithWeb()) {
             AbsoluteLayout.LayoutParams param = new AbsoluteLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,
-                    0, 0);
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT, 0, 0);
             addViewToWebView(view, param, TAG + dataVO.getId());
-        }else {
+        } else {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
             addViewToCurrentWindow(view, layoutParams);
         }
-        mInputTexts.put(id, new SeckeyboardData(view, dataVO.isScrollWithWeb()));
+        mInputTexts.put(id,
+                new SeckeyboardData(view, dataVO.isScrollWithWeb()));
 
     }
 
@@ -104,23 +117,23 @@ public class EUExSecurityKeyboard extends EUExBase {
         List<String> ids = null;
         if (params != null && params.length > 0) {
             String json = params[0];
-            ids = DataHelper.gson.fromJson(json,
-                    new TypeToken<List<String>>() {
-                    }.getType());
+            ids = DataHelper.gson.fromJson(json, new TypeToken<List<String>>() {
+            }.getType());
         }
-        if (ids == null || ids.size() < 1){
-            //关闭全部
+        if (ids == null || ids.size() < 1) {
+            // 关闭全部
             ids = getAllListViewIds();
         }
 
         if (ids != null && ids.size() > 0) {
             for (int i = 0; i < ids.size(); i++) {
                 String id = ids.get(i);
-                if (mInputTexts.containsKey(id)){
-                    if (mInputTexts.get(id).isScrollWithWeb()){
+                if (mInputTexts.containsKey(id)) {
+                    if (mInputTexts.get(id).isScrollWithWeb()) {
                         removeViewFromWebView(TAG + id);
-                    }else{
-                        SecKeyboardView view = mInputTexts.get(id).getView();
+                    } else {
+                        SecurityKeyBoardBaseView view = mInputTexts.get(id)
+                                .getView();
                         removeViewFromCurrentWindow(view);
                     }
                 }
@@ -141,12 +154,11 @@ public class EUExSecurityKeyboard extends EUExBase {
         List<String> ids = null;
         if (params != null && params.length > 0) {
             String json = params[0];
-            ids = DataHelper.gson.fromJson(json,
-                    new TypeToken<List<String>>() {
-                    }.getType());
+            ids = DataHelper.gson.fromJson(json, new TypeToken<List<String>>() {
+            }.getType());
         }
-        if (ids == null || ids.size() < 1){
-            //获取全部数据
+        if (ids == null || ids.size() < 1) {
+            // 获取全部数据
             ids = getAllListViewIds();
         }
         List<ResultVO> list = new ArrayList<ResultVO>();
@@ -155,9 +167,10 @@ public class EUExSecurityKeyboard extends EUExBase {
                 ResultVO resultVO = new ResultVO();
                 String id = ids.get(i);
                 resultVO.setId(id);
-                if (mInputTexts.containsKey(id)){
-                    EditText editText = mInputTexts.get(id).getView().getInputEditText();
-                    if (editText != null){
+                if (mInputTexts.containsKey(id)) {
+                    EditText editText = mInputTexts.get(id).getView()
+                            .getInputEditText();
+                    if (editText != null) {
                         String content = editText.getText().toString();
                         resultVO.setContent(content);
                         list.add(resultVO);
@@ -165,7 +178,8 @@ public class EUExSecurityKeyboard extends EUExBase {
                 }
             }
         }
-        callBackPluginJs(JsConst.CALLBACK_GET_CONTENT, DataHelper.gson.toJson(list));
+        callBackPluginJs(JsConst.CALLBACK_GET_CONTENT,
+                DataHelper.gson.toJson(list));
     }
 
     public void onKeyPress(int type) {
@@ -191,35 +205,11 @@ public class EUExSecurityKeyboard extends EUExBase {
                 onKeyPressJson.toString());
     }
 
-    private void callBackPluginJs(String methodName, String jsonData){
-        String js = SCRIPT_HEADER + "if(" + methodName + "){"
-                + methodName + "('" + jsonData + "');}";
+    private void callBackPluginJs(String methodName, String jsonData) {
+        String js = SCRIPT_HEADER + "if(" + methodName + "){" + methodName
+                + "('" + jsonData + "');}";
         Log.i(TAG, "callBackPluginJs:" + js);
         onCallback(js);
     }
 
-    public interface OnInputStatusListener{
-        public void onInputCompleted(ResultVO resultVO);
-        public void onKeyboardDismiss(ResultVO resultVO);
-    }
-
-    private class InputStatusListener implements OnInputStatusListener{
-
-        private String id;
-        public InputStatusListener(String id) {
-            this.id = id;
-        }
-
-        @Override
-        public void onInputCompleted(ResultVO resultVO) {
-            resultVO.setId(id);
-            //callBackPluginJs(JsConst.ON_INPUT_COMPLETED, DataHelper.gson.toJson(resultVO));
-        }
-
-        @Override
-        public void onKeyboardDismiss(ResultVO resultVO) {
-            resultVO.setId(id);
-            //callBackPluginJs(JsConst.ON_KEYBOARD_DISMISS, DataHelper.gson.toJson(resultVO));
-        }
-    }
 }

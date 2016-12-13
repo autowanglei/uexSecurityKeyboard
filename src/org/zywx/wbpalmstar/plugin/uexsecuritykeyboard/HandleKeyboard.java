@@ -3,11 +3,11 @@ package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard;
 import java.util.List;
 
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard.OnInputStatusListener;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.inputmethodservice.Keyboard;
@@ -66,9 +66,8 @@ public class HandleKeyboard implements View.OnClickListener {
 
         mImm = (InputMethodManager) mActivity
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-
         switch (dataVO.getKeyboardType()) {
-        case JsConst.KEYBOARD_MODE_CUSTOM:
+        case ConstantUtil.KEYBOARD_MODE_CUSTOM:
             isCustom = true;
             letters = new Keyboard(mActivity,
                     EUExUtil.getResXmlID("plugin_uexsecuritykeyboard_letters"));
@@ -79,14 +78,14 @@ public class HandleKeyboard implements View.OnClickListener {
             mKeyboardView.setKeyboard(letters);
             mDone.setVisibility(View.VISIBLE);
             break;
-        case JsConst.KEYBOARD_MODE_NUMBER:
+        case ConstantUtil.KEYBOARD_MODE_NUMBER:
             isCustom = true;
             onlyNumbers = new Keyboard(mActivity, EUExUtil
                     .getResXmlID("plugin_uexsecuritykeyboard_only_numbers"));
             mKeyboardView.setKeyboard(onlyNumbers);
             mDone.setVisibility(View.GONE);
             break;
-        case JsConst.KEYBOARD_MODE_DEFAULT:
+        case ConstantUtil.KEYBOARD_MODE_DEFAULT:
             isCustom = false;
             break;
         }
@@ -126,6 +125,7 @@ public class HandleKeyboard implements View.OnClickListener {
     /**
      * 隐藏系统键盘 Edittext不显示系统键盘；并且要有光标； 4.0以上TYPE_NULL，不显示系统键盘，但是光标也没了；
      */
+    @SuppressLint("NewApi")
     private void hideSoftInputMethod(EditText et) {
         int currentVersion = android.os.Build.VERSION.SDK_INT;
         String methodName = null;
@@ -208,11 +208,11 @@ public class HandleKeyboard implements View.OnClickListener {
                 changeKey();
                 mKeyboardView.setKeyboard(letters);
 
-            } else if (primaryCode == JsConst.KEYCODE_CHANGE_NUMBER) {// 数字键盘切换
+            } else if (primaryCode == ConstantUtil.KEYCODE_CHANGE_NUMBER) {// 数字键盘切换
                 mKeyboardView.setKeyboard(numbers);
-            } else if (primaryCode == JsConst.KEYCODE_CHANGE_SYMBOL) {// 符号切换
+            } else if (primaryCode == ConstantUtil.KEYCODE_CHANGE_SYMBOL) {// 符号切换
                 mKeyboardView.setKeyboard(symbols);
-            } else if (primaryCode == JsConst.KEYCODE_CHANGE_LETTER) {// 字母切换
+            } else if (primaryCode == ConstantUtil.KEYCODE_CHANGE_LETTER) {// 字母切换
                 mKeyboardView.setKeyboard(letters);
             } else {
                 if ((maxInputLength < 0)
