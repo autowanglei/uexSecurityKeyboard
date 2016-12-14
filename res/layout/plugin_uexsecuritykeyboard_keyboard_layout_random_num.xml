@@ -30,20 +30,9 @@
 	        android:orientation="vertical"
 	        android:visibility="gone" >
 	
-	        <include layout="@layout/plugin_uexsecuritykeyboard_randomkeyboard_number" />
+	        <include layout="@layout/plugin_uexsecuritykeyboard_random_number" />
 	    </LinearLayout>
         
-<!--         <android.inputmethodservice.KeyboardView -->
-<!--             android:id="@+id/keyboard_view" -->
-<!--             android:layout_width="fill_parent" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:layout_alignParentBottom="true" -->
-<!--             android:focusable="true" -->
-<!--             android:focusableInTouchMode="true" -->
-<!--             android:keyBackground="@drawable/plugin_uexsecuritykeyboard_kb_btn_normal" -->
-<!--             android:background="@color/plugin_uexsecuritykeyboard_keyboard_bg" -->
-<!--             android:keyTextColor="@color/white" -->
-<!--             /> -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,16 +48,6 @@
                 android:padding="5dp"
                 android:textSize="16sp"
                 android:layout_weight="1"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/done"
-                android:gravity="center"
-                android:padding="5dp"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:text="@string/plugin_uexsecuritykeyboard_done"
-                android:background="@null"/>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

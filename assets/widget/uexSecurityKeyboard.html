@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="css/index.css">
 
     <script type="text/javascript">
-    function openKey(){
+    function openKeyAll(){
         var params = {
             id:"1",
             x:0,
@@ -19,14 +19,14 @@
             keyboardDescription:"正益移动安全输入",
             showClearText:false,
             showInputBox:true,
-            showClickEffect:true,
+            isHighlight:true,
             hintText:"全键盘"
         };
         var data = JSON.stringify(params);
         uexSecurityKeyboard.open(data);
     }
 
-    function openKey1(){
+    function openKeyNum(){
         var params = {
             id:"2",
             x:0,
@@ -37,10 +37,28 @@
             isScrollWithWeb:false,
             keyboardDescription:"正益移动安全输入",
             showInputBox:true,
-            isRandom:true,
             textSize:14,
-            showClickEffect:false,
+            isHighlight:false,
             hintText:"数字键盘"
+        };
+        var data = JSON.stringify(params);
+        uexSecurityKeyboard.open(data);
+    }
+    function openKeyRandomNum(){
+        var params = {
+                id:"3",
+                x:0,
+                y:800,
+                width:800,
+                height:150,
+                keyboardType:0,
+                isScrollWithWeb:false,
+                keyboardDescription:"正益移动安全输入",
+                showInputBox:true,
+                textSize:14,
+                isRandom:true,
+                isHighlight:false,
+                hintText:"随机数字键盘"
         };
         var data = JSON.stringify(params);
         uexSecurityKeyboard.open(data);
@@ -86,10 +104,10 @@
 <div class="tit">uexSecurityKeyboard</div>
 <div class="conbor">
     <div class="consj">
-        <input class='btn' type='button' value='open1' onclick='openKey()'>
-        <input class='btn' type='button' value='open2' onclick='openKey1()'>
+        <input class='btn' type='button' value='全键盘' onclick='openKeyAll()'>
+        <input class='btn' type='button' value='数字键盘' onclick='openKeyNum()'>
+        <input class='btn' type='button' value='随机数字键盘' onclick='openKeyRandomNum()'>
         <br><br><br><br><br><br>
-        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <input class='btn' type='button' value='close' onclick='closeKey()'>
         <input class='btn' type='button' value='get' onclick='getContent()'>

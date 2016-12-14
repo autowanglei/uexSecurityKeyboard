@@ -11,17 +11,17 @@ import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.JsConst;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.SeckeyboardData;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.RandomKeyboardView;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.SecKeyboardView;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.SecurityKeyBoardBaseView;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.BaseFrameLayout;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
 
 import com.google.gson.reflect.TypeToken;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,7 +32,6 @@ import android.widget.RelativeLayout;
 
 public class EUExSecurityKeyboard extends EUExBase {
 
-    private static final String BUNDLE_DATA = "data";
     public static final String TAG = "EUExSecurityKeyboard";
     private HashMap<String, SeckeyboardData> mInputTexts = new HashMap<String, SeckeyboardData>();
 
@@ -50,9 +49,7 @@ public class EUExSecurityKeyboard extends EUExBase {
         if (message == null) {
             return;
         }
-        Bundle bundle = message.getData();
         switch (message.what) {
-
         default:
             super.onHandleMessage(message);
         }
@@ -79,7 +76,7 @@ public class EUExSecurityKeyboard extends EUExBase {
                 dataVO.getWidth(), dataVO.getHeight());
         inputEditLpRl.leftMargin = dataVO.getX();
         inputEditLpRl.topMargin = dataVO.getY();
-        SecurityKeyBoardBaseView view = null;
+        BaseFrameLayout view = null;
         /** 乱序、数字键盘 */
         if (dataVO.isRandom() && (ConstantUtil.KEYBOARD_MODE_NUMBER == dataVO
                 .getKeyboardType())) {
@@ -132,7 +129,7 @@ public class EUExSecurityKeyboard extends EUExBase {
                     if (mInputTexts.get(id).isScrollWithWeb()) {
                         removeViewFromWebView(TAG + id);
                     } else {
-                        SecurityKeyBoardBaseView view = mInputTexts.get(id)
+                        BaseFrameLayout view = mInputTexts.get(id)
                                 .getView();
                         removeViewFromCurrentWindow(view);
                     }

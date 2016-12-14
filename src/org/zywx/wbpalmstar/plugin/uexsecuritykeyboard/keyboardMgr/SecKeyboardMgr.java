@@ -1,86 +1,73 @@
-package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard;
+package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.keyboardMgr;
 
 import java.util.List;
 
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.OnInputStatusListener;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.text.Editable;
-import android.text.InputType;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HandleKeyboard implements View.OnClickListener {
+public class SecKeyboardMgr extends KeyboardBaseMgr
+        implements View.OnClickListener {
 
-    private Activity mActivity;
-
+    private Context mContext;
     public boolean isUpper = false;// 是否大写
-
-    private InputMethodManager mImm;
     private KeyboardView mKeyboardView;
     private Keyboard letters;// 字母键盘
     private Keyboard numbers;// 数字键盘
     private Keyboard symbols;// 符号键盘
-
     private Keyboard onlyNumbers;// 纯数字键盘
-
     private TextView mDone;// 完成
-
-    private EditText ed;
-    private RelativeLayout mParentView;
-
     private OnInputStatusListener mListener;
-
-    private boolean isCustom;
     private EUExSecurityKeyboard mEUExKeyboard;
     private OpenDataVO dataVO;
     private int maxInputLength;
+    private RelativeLayout mParentView;
 
-    public HandleKeyboard(Activity act, EUExSecurityKeyboard mKeyboard,
-            final EditText editText, RelativeLayout view, OpenDataVO dataVO) {
-
-        this.mActivity = act;
-        this.mEUExKeyboard = mKeyboard;
-        this.ed = editText;
-        this.mParentView = view;
+    public SecKeyboardMgr(final Context context,
+            final EUExSecurityKeyboard mEUExKeyboard, final EditText editText,
+            final RelativeLayout mParentView, OpenDataVO dataVO) {
+        super(context);
+        this.mContext = context;
+        this.mEUExKeyboard = mEUExKeyboard;
+        this.mParentView = mParentView;
+        this.mEditText = editText;
         this.dataVO = dataVO;
         this.maxInputLength = dataVO.getMaxInputLength();
-        this.mKeyboardView = (KeyboardView) view
+        this.mKeyboardView = (KeyboardView) mParentView
                 .findViewById(EUExUtil.getResIdID("keyboard_view"));
-        this.mDone = (TextView) view.findViewById(EUExUtil.getResIdID("done"));
+        this.mDone = (TextView) mParentView
+                .findViewById(EUExUtil.getResIdID("done"));
 
         mDone.setOnClickListener(this);
-
-        mImm = (InputMethodManager) mActivity
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
         switch (dataVO.getKeyboardType()) {
         case ConstantUtil.KEYBOARD_MODE_CUSTOM:
             isCustom = true;
-            letters = new Keyboard(mActivity,
+            letters = new Keyboard(mContext,
                     EUExUtil.getResXmlID("plugin_uexsecuritykeyboard_letters"));
-            numbers = new Keyboard(mActivity,
+            numbers = new Keyboard(mContext,
                     EUExUtil.getResXmlID("plugin_uexsecuritykeyboard_numbers"));
-            symbols = new Keyboard(mActivity,
+            symbols = new Keyboard(mContext,
                     EUExUtil.getResXmlID("plugin_uexsecuritykeyboard_symbols"));
             mKeyboardView.setKeyboard(letters);
             mDone.setVisibility(View.VISIBLE);
             break;
         case ConstantUtil.KEYBOARD_MODE_NUMBER:
             isCustom = true;
-            onlyNumbers = new Keyboard(mActivity, EUExUtil
+            onlyNumbers = new Keyboard(mContext, EUExUtil
                     .getResXmlID("plugin_uexsecuritykeyboard_only_numbers"));
             mKeyboardView.setKeyboard(onlyNumbers);
             mDone.setVisibility(View.GONE);
@@ -92,73 +79,24 @@ public class HandleKeyboard implements View.OnClickListener {
         mKeyboardView.setEnabled(true);
         mKeyboardView.setPreviewEnabled(false);
         mKeyboardView.setOnKeyboardActionListener(listener);
+        setEditTextListener(mEUExKeyboard, mParentView,
+                new KeyboardStatuController() {
+                    @Override
+                    public void hide(EUExSecurityKeyboard mEUExKeyboard,
+                            View keyboardView, boolean isDone) {
+                        hideKeyboard(mEUExKeyboard, mParentView, isDone);
+                    }
 
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (!b && isCustom) {
-                    hideKeyboard(false);
-                } else {
-                    mImm.hideSoftInputFromWindow(view.getWindowToken(), 0); // 强制隐藏键盘
-                }
-            }
-        });
-
-        editText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (isCustom) {
-                    int inputType = editText.getInputType();
-                    hideSoftInputMethod(editText);
-                    showKeyboard();
-                    editText.setInputType(inputType);
-                }
-                return false;
-            }
-        });
+                    @Override
+                    public void show(EUExSecurityKeyboard mEUExKeyboard,
+                            View keyboardView) {
+                        showKeyboard(context, mEUExKeyboard, mParentView);
+                    }
+                });
     }
 
     public void setOnInputStatusListener(OnInputStatusListener listener) {
         this.mListener = listener;
-    }
-
-    /**
-     * 隐藏系统键盘 Edittext不显示系统键盘；并且要有光标； 4.0以上TYPE_NULL，不显示系统键盘，但是光标也没了；
-     */
-    @SuppressLint("NewApi")
-    private void hideSoftInputMethod(EditText et) {
-        int currentVersion = android.os.Build.VERSION.SDK_INT;
-        String methodName = null;
-        /** 4.0及以下 */
-        if (currentVersion <= 14) {
-            et.setInputType(InputType.TYPE_NULL);
-        } else {
-            et.setShowSoftInputOnFocus(false);
-        }
-        // if (currentVersion >= 16) {
-        // // 4.2
-        // methodName = "setShowSoftInputOnFocus";
-        // // 19 setShowSoftInputOnFocus
-        // } else if (currentVersion >= 14) {
-        // // 4.0
-        // methodName = "setSoftInputShownOnFocus";
-        // }
-        //
-        // if (methodName == null) {
-        // et.setInputType(InputType.TYPE_NULL);
-        // } else {
-        // Class<TextView> cls = TextView.class;
-        // java.lang.reflect.Method setShowSoftInputOnFocus;
-        // try {
-        // setShowSoftInputOnFocus = cls.getMethod(methodName,
-        // boolean.class);
-        // setShowSoftInputOnFocus.setAccessible(true);
-        // setShowSoftInputOnFocus.invoke(this, false);
-        // } catch (Exception e) {
-        // et.setInputType(InputType.TYPE_NULL);
-        // e.printStackTrace();
-        // }
-        // }
     }
 
     private OnKeyboardActionListener listener = new OnKeyboardActionListener() {
@@ -193,10 +131,10 @@ public class HandleKeyboard implements View.OnClickListener {
 
         @Override
         public void onKey(int primaryCode, int[] keyCodes) {
-            Editable editable = ed.getText();
-            int start = ed.getSelectionStart();
+            Editable editable = mEditText.getText();
+            int start = mEditText.getSelectionStart();
             if (primaryCode == Keyboard.KEYCODE_DONE) {
-                onKeyDonePress();
+                onKeyDonePress(mEUExKeyboard, mParentView);
             } else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
                 if (editable != null && editable.length() > 0) {
                     if (start > 0) {
@@ -238,7 +176,7 @@ public class HandleKeyboard implements View.OnClickListener {
                     key.codes[0] = key.codes[0] + 32;
                 }
                 if (key.codes[0] == -1) {
-                    key.icon = mActivity.getResources()
+                    key.icon = mContext.getResources()
                             .getDrawable(EUExUtil.getResDrawableID(
                                     "plugin_uexsecuritykeyboard_key_icon_shift_normal"));
                 }
@@ -251,7 +189,7 @@ public class HandleKeyboard implements View.OnClickListener {
                     key.codes[0] = key.codes[0] - 32;
                 }
                 if (key.codes[0] == -1) {
-                    key.icon = mActivity.getResources()
+                    key.icon = mContext.getResources()
                             .getDrawable(EUExUtil.getResDrawableID(
                                     "plugin_uexsecuritykeyboard_key_icon_shift_highlighted"));
                 }
@@ -259,10 +197,11 @@ public class HandleKeyboard implements View.OnClickListener {
         }
     }
 
-    public void showKeyboard() {
-        int visibility = mParentView.getVisibility();
+    public void showKeyboard(Context context,
+            EUExSecurityKeyboard mEUExKeyboard, View keyboardView) {
+        int visibility = keyboardView.getVisibility();
         if (visibility == View.GONE || visibility == View.INVISIBLE) {
-            mParentView.setVisibility(View.VISIBLE);
+            keyboardView.setVisibility(View.VISIBLE);
             mEUExKeyboard.onKeyboardVisibilityChange(dataVO.getId(),
                     ConstantUtil.KEY_BORAD_VISIBLE);
         }
@@ -271,8 +210,9 @@ public class HandleKeyboard implements View.OnClickListener {
     /**
      * INPUT_TYPE_DONE，输入完成时，回调处理
      */
-    private void onKeyDonePress() {
-        hideKeyboard(true);
+    private void onKeyDonePress(EUExSecurityKeyboard mEUExKeyboard,
+            View keyboardView) {
+        hideKeyboard(mEUExKeyboard, keyboardView, true);
         if (mEUExKeyboard != null) {
             mEUExKeyboard.onKeyPress(ConstantUtil.INPUT_TYPE_DONE);
         }
@@ -289,11 +229,12 @@ public class HandleKeyboard implements View.OnClickListener {
         }
     }
 
-    public void hideKeyboard(boolean isDone) {
-        int visibility = mParentView.getVisibility();
+    public void hideKeyboard(EUExSecurityKeyboard mEUExKeyboard,
+            View keyboardView, boolean isDone) {
+        int visibility = keyboardView.getVisibility();
         if (visibility == View.VISIBLE) {
             ResultVO resultVO = new ResultVO();
-            resultVO.setContent(ed.getText().toString());
+            resultVO.setContent(mEditText.getText().toString());
             if (mListener != null) {
                 if (isDone) {
                     mListener.onInputCompleted(resultVO);
@@ -301,7 +242,7 @@ public class HandleKeyboard implements View.OnClickListener {
                     mListener.onKeyboardDismiss(resultVO);
                 }
             }
-            mParentView.setVisibility(View.INVISIBLE);
+            keyboardView.setVisibility(View.INVISIBLE);
             mEUExKeyboard.onKeyboardVisibilityChange(dataVO.getId(),
                     ConstantUtil.KEY_BORAD_INVISIBLE);
         }
@@ -318,7 +259,7 @@ public class HandleKeyboard implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == mDone) {
-            onKeyDonePress();
+            onKeyDonePress(mEUExKeyboard, mParentView);
         }
     }
 }

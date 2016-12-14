@@ -1,4 +1,4 @@
-package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard;
+package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util;
 
 public class JsConst {
 
