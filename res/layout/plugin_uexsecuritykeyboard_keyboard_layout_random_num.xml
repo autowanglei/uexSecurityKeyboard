@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:visibility="visible"
-        android:id="@+id/parentView"
+        android:visibility="gone"
+        android:id="@+id/keyboard_view_parent"
         >
         
 	    <LinearLayout
@@ -27,8 +27,7 @@
 	        android:focusableInTouchMode="true"
             android:background="@color/plugin_uexsecuritykeyboard_keyboard_bg"
             android:keyTextColor="@color/white"
-	        android:orientation="vertical"
-	        android:visibility="gone" >
+	        android:orientation="vertical">
 	
 	        <include layout="@layout/plugin_uexsecuritykeyboard_random_number" />
 	    </LinearLayout>

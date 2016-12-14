@@ -13,14 +13,10 @@ public class InputStatusListener implements OnInputStatusListener {
     @Override
     public void onInputCompleted(ResultVO resultVO) {
         resultVO.setId(id);
-        // callBackPluginJs(JsConst.ON_INPUT_COMPLETED,
-        // DataHelper.gson.toJson(resultVO));
     }
 
     @Override
     public void onKeyboardDismiss(ResultVO resultVO) {
         resultVO.setId(id);
-        // callBackPluginJs(JsConst.ON_KEYBOARD_DISMISS,
-        // DataHelper.gson.toJson(resultVO));
     }
 }

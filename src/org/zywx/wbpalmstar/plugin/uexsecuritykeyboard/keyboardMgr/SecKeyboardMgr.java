@@ -4,10 +4,9 @@ import java.util.List;
 
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.OnInputStatusListener;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.InputStatusListener;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
 
 import android.content.Context;
 import android.inputmethodservice.Keyboard;
@@ -31,20 +30,17 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
     private Keyboard symbols;// 符号键盘
     private Keyboard onlyNumbers;// 纯数字键盘
     private TextView mDone;// 完成
-    private OnInputStatusListener mListener;
     private EUExSecurityKeyboard mEUExKeyboard;
     private OpenDataVO dataVO;
     private int maxInputLength;
-    private RelativeLayout mParentView;
 
     public SecKeyboardMgr(final Context context,
-            final EUExSecurityKeyboard mEUExKeyboard, final EditText editText,
-            final RelativeLayout mParentView, OpenDataVO dataVO) {
-        super(context);
+            final EUExSecurityKeyboard mEUExKeyboard,
+            final RelativeLayout mParentView, final EditText editText,
+            InputStatusListener mInputStatusListener, OpenDataVO dataVO) {
+        super(context, mParentView, editText, mInputStatusListener);
         this.mContext = context;
         this.mEUExKeyboard = mEUExKeyboard;
-        this.mParentView = mParentView;
-        this.mEditText = editText;
         this.dataVO = dataVO;
         this.maxInputLength = dataVO.getMaxInputLength();
         this.mKeyboardView = (KeyboardView) mParentView
@@ -79,24 +75,8 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
         mKeyboardView.setEnabled(true);
         mKeyboardView.setPreviewEnabled(false);
         mKeyboardView.setOnKeyboardActionListener(listener);
-        setEditTextListener(mEUExKeyboard, mParentView,
-                new KeyboardStatuController() {
-                    @Override
-                    public void hide(EUExSecurityKeyboard mEUExKeyboard,
-                            View keyboardView, boolean isDone) {
-                        hideKeyboard(mEUExKeyboard, mParentView, isDone);
-                    }
-
-                    @Override
-                    public void show(EUExSecurityKeyboard mEUExKeyboard,
-                            View keyboardView) {
-                        showKeyboard(context, mEUExKeyboard, mParentView);
-                    }
-                });
-    }
-
-    public void setOnInputStatusListener(OnInputStatusListener listener) {
-        this.mListener = listener;
+        setEditTextListener(context, mEUExKeyboard, mParentView,
+                dataVO.getId());
     }
 
     private OnKeyboardActionListener listener = new OnKeyboardActionListener() {
@@ -134,7 +114,7 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
             Editable editable = mEditText.getText();
             int start = mEditText.getSelectionStart();
             if (primaryCode == Keyboard.KEYCODE_DONE) {
-                onKeyDonePress(mEUExKeyboard, mParentView);
+                onKeyDonePress(mEUExKeyboard, keyboardViewParent);
             } else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
                 if (editable != null && editable.length() > 0) {
                     if (start > 0) {
@@ -197,22 +177,13 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
         }
     }
 
-    public void showKeyboard(Context context,
-            EUExSecurityKeyboard mEUExKeyboard, View keyboardView) {
-        int visibility = keyboardView.getVisibility();
-        if (visibility == View.GONE || visibility == View.INVISIBLE) {
-            keyboardView.setVisibility(View.VISIBLE);
-            mEUExKeyboard.onKeyboardVisibilityChange(dataVO.getId(),
-                    ConstantUtil.KEY_BORAD_VISIBLE);
-        }
-    }
-
     /**
      * INPUT_TYPE_DONE，输入完成时，回调处理
      */
     private void onKeyDonePress(EUExSecurityKeyboard mEUExKeyboard,
             View keyboardView) {
-        hideKeyboard(mEUExKeyboard, keyboardView, true);
+        hideKeyboard(mEUExKeyboard, keyboardView, dataVO.getId(),
+                mInputStatusListener, true);
         if (mEUExKeyboard != null) {
             mEUExKeyboard.onKeyPress(ConstantUtil.INPUT_TYPE_DONE);
         }
@@ -229,25 +200,6 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
         }
     }
 
-    public void hideKeyboard(EUExSecurityKeyboard mEUExKeyboard,
-            View keyboardView, boolean isDone) {
-        int visibility = keyboardView.getVisibility();
-        if (visibility == View.VISIBLE) {
-            ResultVO resultVO = new ResultVO();
-            resultVO.setContent(mEditText.getText().toString());
-            if (mListener != null) {
-                if (isDone) {
-                    mListener.onInputCompleted(resultVO);
-                } else {
-                    mListener.onKeyboardDismiss(resultVO);
-                }
-            }
-            keyboardView.setVisibility(View.INVISIBLE);
-            mEUExKeyboard.onKeyboardVisibilityChange(dataVO.getId(),
-                    ConstantUtil.KEY_BORAD_INVISIBLE);
-        }
-    }
-
     private boolean isWord(String str) {
         String wordStr = "abcdefghijklmnopqrstuvwxyz";
         if (wordStr.contains(str.toLowerCase())) {
@@ -259,7 +211,7 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
     @Override
     public void onClick(View v) {
         if (v == mDone) {
-            onKeyDonePress(mEUExKeyboard, mParentView);
+            onKeyDonePress(mEUExKeyboard, keyboardViewParent);
         }
     }
 }

@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:visibility="gone"
-        android:id="@+id/parentView"
+        android:id="@+id/keyboard_view_parent"
         >
         <android.inputmethodservice.KeyboardView
             android:id="@+id/keyboard_view"
