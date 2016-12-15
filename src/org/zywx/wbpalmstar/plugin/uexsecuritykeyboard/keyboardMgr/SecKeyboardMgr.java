@@ -30,15 +30,14 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
     private Keyboard symbols;// 符号键盘
     private Keyboard onlyNumbers;// 纯数字键盘
     private TextView mDone;// 完成
-    private EUExSecurityKeyboard mEUExKeyboard;
-    private OpenDataVO dataVO;
     private int maxInputLength;
 
     public SecKeyboardMgr(final Context context,
             final EUExSecurityKeyboard mEUExKeyboard,
             final RelativeLayout mParentView, final EditText editText,
             InputStatusListener mInputStatusListener, OpenDataVO dataVO) {
-        super(context, mParentView, editText, mInputStatusListener);
+        super(context, mEUExKeyboard, mParentView, editText,
+                mInputStatusListener, dataVO);
         this.mContext = context;
         this.mEUExKeyboard = mEUExKeyboard;
         this.dataVO = dataVO;
@@ -135,9 +134,9 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
             } else {
                 if ((maxInputLength < 0)
                         || (editable.length() < dataVO.getMaxInputLength())) {
-                    editable.insert(start,
-                            Character.toString((char) primaryCode));
-                    cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_TEXT);
+                    insertValue(Character.toString((char) primaryCode));
+                    // editable.insert(start,
+                    // Character.toString((char) primaryCode));
                 }
             }
         }
@@ -186,17 +185,6 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
                 mInputStatusListener, true);
         if (mEUExKeyboard != null) {
             mEUExKeyboard.onKeyPress(ConstantUtil.INPUT_TYPE_DONE);
-        }
-    }
-
-    /**
-     * INPUT_TYPE_TEXT = 0; INPUT_TYPE_DEL = 1时，回调处理
-     * 
-     * @param inputType
-     */
-    private void cbKeyPressToWeb(int inputType) {
-        if (!dataVO.isShowInputBox() && mEUExKeyboard != null) {
-            mEUExKeyboard.onKeyPress(inputType);
         }
     }
 

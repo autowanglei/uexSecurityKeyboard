@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 public class RandomKeyboardView extends BaseFrameLayout {
 
     public static final String TAG = "RandomKeyboardActivity";
-    private RandomKeyBoardMgr mRandomKeyBoardMgr;
 
     public RandomKeyboardView(Context context, EUExSecurityKeyboard mKeyboard,
             InputStatusListener mInputStatusListener,
@@ -29,16 +28,17 @@ public class RandomKeyboardView extends BaseFrameLayout {
         RelativeLayout keyboardViewParent = setContentView(context, this,
                 EUExUtil.getResLayoutID(
                         "plugin_uexsecuritykeyboard_keyboard_layout_random_num"));
-        mRandomKeyBoardMgr = new RandomKeyBoardMgr(context, mEUExKeyboard,
+        mKeyboardBaseMgr = new RandomKeyBoardMgr(context, mEUExKeyboard,
                 keyboardViewParent, inputEditText, mInputStatusListener,
                 new KeyboardStatusListener() {
                     @Override
                     public void onKeyboardShow(Context context,
                             View keyboardView) {
-                        mRandomKeyBoardMgr.randomKeyNum(context, keyboardView);
+                        ((RandomKeyBoardMgr) mKeyboardBaseMgr)
+                                .randomKeyNum(context, keyboardView);
                     }
                 }, dataVO);
-        createKeyboard(context, mEUExKeyboard, this, mRandomKeyBoardMgr, dataVO,
-                inputEditLp);
+        createKeyboard(context, mEUExKeyboard, keyboardViewParent,
+                mKeyboardBaseMgr, dataVO, inputEditLp);
     }
 }

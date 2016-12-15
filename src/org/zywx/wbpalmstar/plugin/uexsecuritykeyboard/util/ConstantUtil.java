@@ -16,4 +16,5 @@ public class ConstantUtil {
     public static final int KEY_BORAD_VISIBLE = 1;
     public static final int KEY_BORAD_INVISIBLE = 0;
     public static final int DEF_INPUT_TEXT_SIZE = -1;
+    public static final String PASSWORD_STR = "●";
 }

@@ -11,8 +11,6 @@ import android.widget.RelativeLayout;
 
 public class SecKeyboardView extends BaseFrameLayout {
 
-    private SecKeyboardMgr mKey;
-
     public SecKeyboardView(Context context) {
         super(context);
     }
@@ -34,9 +32,11 @@ public class SecKeyboardView extends BaseFrameLayout {
         }
         RelativeLayout keyboardViewParent = setContentView(context, this,
                 EUExUtil.getResLayoutID(resLayoutId));
-        mKey = new SecKeyboardMgr(context, mEUExKeyboard, keyboardViewParent,
-                inputEditText, mInputStatusListener, dataVO);
-        createKeyboard(context, mEUExKeyboard, this, mKey, dataVO, inputEditLp);
+        mKeyboardBaseMgr = new SecKeyboardMgr(context, mEUExKeyboard,
+                keyboardViewParent, inputEditText, mInputStatusListener,
+                dataVO);
+        createKeyboard(context, mEUExKeyboard, keyboardViewParent,
+                mKeyboardBaseMgr, dataVO, inputEditLp);
 
     }
 

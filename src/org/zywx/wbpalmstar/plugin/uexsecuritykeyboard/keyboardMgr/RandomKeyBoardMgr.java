@@ -35,7 +35,6 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
     // private LinearLayout keypad_num;
     private Button[] btnFunctions = new Button[2];
     private Button[] btnNumbs = new Button[10];
-    private String inputValue = "";
 
     // 数字按钮
     private int[] keyNumIds = {
@@ -76,11 +75,11 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
             final RelativeLayout mParentView, final EditText editText,
             InputStatusListener mInputStatusListener,
             KeyboardStatusListener listener, OpenDataVO dataVO) {
-        super(context, mParentView, editText, mInputStatusListener, listener);
+        super(context, mEUExKeyboard, mParentView, editText,
+                mInputStatusListener, listener, dataVO);
         // 获取控件对象
         isCustom = true;
         findKeyBoardView(mParentView);
-        // randomKeyNum(context, mParentView);
         setEditTextListener(context, mEUExKeyboard, mParentView,
                 dataVO.getId());
     }
@@ -113,54 +112,6 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
     }
 
     /**
-     * 更新输入的内容
-     * 
-     * @Description
-     * @version 3.0 2014-8-1
-     */
-    private void setValue(String inputStr) {
-
-        // EUExRandomKeyboard.getPluginInstance().changeInputContent(inputValue,
-        // cryptValue);
-        // Selection.setSelection(inputFrame.getText(), inputFrame.getText()
-        // .length());// 移动光标到最右
-    }
-
-    /**
-     * 删除输入的内容
-     * 
-     * @Description
-     * @version 3.0 2014-8-1
-     */
-    private void delValue() {
-        inputValue = inputValue.substring(0, inputValue.length() - 1);
-        // EUExRandomKeyboard.getPluginInstance().changeInputContent(inputValue,
-        // cryptValue);
-        // Selection.setSelection(inputFrame.getText(), inputFrame.getText()
-        // .length());// 移动光标
-
-    }
-
-    /**
-     * 清空内容
-     */
-    private void clear() {
-        inputValue = "";
-
-        // EUExRandomKeyboard.getPluginInstance().changeInputContent(inputValue,
-        // cryptValue);
-    }
-
-    /**
-     * 获取输入内容
-     * 
-     * @return
-     */
-    private String getInputContent() {
-        return inputValue;
-    }
-
-    /**
      * 将密码替换成"*" dmq
      */
     StringBuffer replace;
@@ -180,7 +131,7 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
         public void onClick(View v) {
             Button inputBtn = (Button) v;
             // 拼接录入值
-            setValue(inputBtn.getText().toString());
+            insertValue(inputBtn.getText().toString());
         }
     };
 
@@ -195,6 +146,8 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
                 delValue();
             } else if (v.getId() == EUExUtil
                     .getResIdID("plugin_uexsecuritykeyboard_btn_num_done")) {
+                hideKeyboard(mEUExKeyboard, keyboardViewParent, dataVO.getId(),
+                        mInputStatusListener, true);
             }
         }
     };

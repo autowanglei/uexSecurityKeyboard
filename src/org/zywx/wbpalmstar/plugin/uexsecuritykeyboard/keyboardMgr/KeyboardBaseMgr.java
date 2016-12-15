@@ -3,11 +3,14 @@ package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.keyboardMgr;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.InputStatusListener;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.InputType;
+import android.text.Selection;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,36 +19,44 @@ import android.widget.RelativeLayout;
 
 public class KeyboardBaseMgr {
 
+    protected EUExSecurityKeyboard mEUExKeyboard;
     protected RelativeLayout keyboardViewParent;
     protected EditText mEditText;
     protected boolean isCustom;
     protected InputMethodManager mImm;
     protected InputStatusListener mInputStatusListener;
     protected KeyboardStatusListener mKeyboardStatusListener = null;
+    protected OpenDataVO dataVO;
+    protected String inputValue = "";
+    protected String editTextShowValue = "";
 
-    public KeyboardBaseMgr(Context context, RelativeLayout keyboardViewParent,
-            EditText mEditText, InputStatusListener mInputStatusListener,
-            KeyboardStatusListener mKeyboardStatusListener) {
-        initKeyboardBaseMgr(context, keyboardViewParent, mEditText,
-                mInputStatusListener);
+    public KeyboardBaseMgr(Context context, EUExSecurityKeyboard mEUExKeyboard,
+            RelativeLayout keyboardViewParent, EditText mEditText,
+            InputStatusListener mInputStatusListener,
+            KeyboardStatusListener mKeyboardStatusListener, OpenDataVO dataVO) {
+        initKeyboardBaseMgr(context, mEUExKeyboard, keyboardViewParent,
+                mEditText, mInputStatusListener, dataVO);
         this.mKeyboardStatusListener = mKeyboardStatusListener;
     }
 
-    public KeyboardBaseMgr(Context context, RelativeLayout keyboardViewParent,
-            EditText mEditText, InputStatusListener mInputStatusListener) {
-        initKeyboardBaseMgr(context, keyboardViewParent, mEditText,
-                mInputStatusListener);
+    public KeyboardBaseMgr(Context context, EUExSecurityKeyboard mEUExKeyboard,
+            RelativeLayout keyboardViewParent, EditText mEditText,
+            InputStatusListener mInputStatusListener, OpenDataVO dataVO) {
+        initKeyboardBaseMgr(context, mEUExKeyboard, keyboardViewParent,
+                mEditText, mInputStatusListener, dataVO);
     }
 
     private void initKeyboardBaseMgr(Context context,
+            EUExSecurityKeyboard mEUExKeyboard,
             RelativeLayout keyboardViewParent, EditText mEditText,
-            InputStatusListener mInputStatusListener) {
+            InputStatusListener mInputStatusListener, OpenDataVO dataVO) {
         mImm = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
+        this.mEUExKeyboard = mEUExKeyboard;
         this.keyboardViewParent = keyboardViewParent;
         this.mEditText = mEditText;
         this.mInputStatusListener = mInputStatusListener;
-
+        this.dataVO = dataVO;
     }
 
     protected void setEditTextListener(final Context context,
@@ -95,18 +106,18 @@ public class KeyboardBaseMgr {
     public void showKeyboard(Context context,
             EUExSecurityKeyboard mEUExKeyboard, View keyboardView,
             String keyboardId) {
-        if (mKeyboardStatusListener != null) {
-            mKeyboardStatusListener.onKeyboardShow(context, keyboardView);
-        }
         int visibility = keyboardView.getVisibility();
         if (visibility == View.GONE || visibility == View.INVISIBLE) {
+            if (mKeyboardStatusListener != null) {
+                mKeyboardStatusListener.onKeyboardShow(context, keyboardView);
+            }
             keyboardView.setVisibility(View.VISIBLE);
             mEUExKeyboard.onKeyboardVisibilityChange(keyboardId,
                     ConstantUtil.KEY_BORAD_VISIBLE);
         }
     }
 
-    public void hideKeyboard(EUExSecurityKeyboard mEUExKeyboard,
+    protected void hideKeyboard(EUExSecurityKeyboard mEUExKeyboard,
             View keyboardView, String keyboardId,
             InputStatusListener mInputStatusListener, boolean isDone) {
         int visibility = keyboardView.getVisibility();
@@ -123,6 +134,74 @@ public class KeyboardBaseMgr {
             keyboardView.setVisibility(View.INVISIBLE);
             mEUExKeyboard.onKeyboardVisibilityChange(keyboardId,
                     ConstantUtil.KEY_BORAD_INVISIBLE);
+        }
+    }
+
+    /**
+     * 更新输入的内容
+     * 
+     * @Description
+     * @version 3.0 2014-8-1
+     */
+    protected void insertValue(String inputStr) {
+        inputValue = inputValue + inputStr;
+        if (!dataVO.isShowClearText()) {
+            inputStr = ConstantUtil.PASSWORD_STR;
+        }
+        editTextShowValue = editTextShowValue + inputStr;
+        cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_TEXT);
+        updateEditText(editTextShowValue);
+    }
+
+    /**
+     * 删除输入的内容
+     * 
+     * @Description
+     * @version 3.0 2014-8-1
+     */
+    protected void delValue() {
+        if (inputValue.length() > 0) {
+            inputValue = inputValue.substring(0, inputValue.length() - 1);
+            editTextShowValue = editTextShowValue.substring(0,
+                    editTextShowValue.length() - 1);
+            updateEditText(editTextShowValue);
+        }
+    }
+
+    /**
+     * 清空内容
+     */
+    protected void clear() {
+        if (!TextUtils.isEmpty(inputValue)) {
+            inputValue = "";
+            editTextShowValue = "";
+            updateEditText(editTextShowValue);
+        }
+    }
+
+    /**
+     * 获取输入内容
+     * 
+     * @return
+     */
+    public String getInputContent() {
+        return inputValue;
+    }
+
+    private void updateEditText(String text) {
+        mEditText.setText(text);
+        Selection.setSelection(mEditText.getText(),
+                mEditText.getText().length());// 移动光标到最右
+    }
+
+    /**
+     * INPUT_TYPE_TEXT = 0; INPUT_TYPE_DEL = 1时，回调处理
+     * 
+     * @param inputType
+     */
+    protected void cbKeyPressToWeb(int inputType) {
+        if (!dataVO.isShowInputBox() && mEUExKeyboard != null) {
+            mEUExKeyboard.onKeyPress(inputType);
         }
     }
 

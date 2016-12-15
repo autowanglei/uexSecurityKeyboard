@@ -8,7 +8,6 @@ import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 
 public class BaseFrameLayout extends FrameLayout {
     protected EditText inputEditText;
+    protected KeyboardBaseMgr mKeyboardBaseMgr;
 
     public BaseFrameLayout(Context context) {
         super(context);
@@ -61,10 +61,6 @@ public class BaseFrameLayout extends FrameLayout {
             RelativeLayout.LayoutParams inputEditLp) {
         inputEditText.setLayoutParams(inputEditLp);
         if (dataVO.isShowInputBox()) {
-            if (!dataVO.isShowClearText()) {
-                inputEditText.setInputType(InputType.TYPE_CLASS_TEXT
-                        | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            }
             if (!TextUtils.isEmpty(dataVO.getBackgroundColor())) {
                 inputEditText.setBackgroundColor(
                         Color.parseColor(dataVO.getBackgroundColor()));
@@ -84,14 +80,15 @@ public class BaseFrameLayout extends FrameLayout {
                 inputEditText.setHint(dataVO.getHintText());
             }
         } else {
+            keyboardView.setVisibility(View.INVISIBLE);
             inputEditText.setVisibility(View.INVISIBLE);
             keyboardMgr.showKeyboard(context, mEUExKeyboard, keyboardView,
                     dataVO.getId());
         }
     }
 
-    public EditText getInputEditText() {
-        return inputEditText;
+    public String getInputValue() {
+        return mKeyboardBaseMgr.getInputContent();
     }
 
 }

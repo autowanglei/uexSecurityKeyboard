@@ -13,9 +13,9 @@ import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.JsConst;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.SeckeyboardData;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.BaseFrameLayout;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.RandomKeyboardView;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.SecKeyboardView;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.BaseFrameLayout;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
 
@@ -27,7 +27,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 public class EUExSecurityKeyboard extends EUExBase {
@@ -129,8 +128,7 @@ public class EUExSecurityKeyboard extends EUExBase {
                     if (mInputTexts.get(id).isScrollWithWeb()) {
                         removeViewFromWebView(TAG + id);
                     } else {
-                        BaseFrameLayout view = mInputTexts.get(id)
-                                .getView();
+                        BaseFrameLayout view = mInputTexts.get(id).getView();
                         removeViewFromCurrentWindow(view);
                     }
                 }
@@ -165,13 +163,10 @@ public class EUExSecurityKeyboard extends EUExBase {
                 String id = ids.get(i);
                 resultVO.setId(id);
                 if (mInputTexts.containsKey(id)) {
-                    EditText editText = mInputTexts.get(id).getView()
-                            .getInputEditText();
-                    if (editText != null) {
-                        String content = editText.getText().toString();
-                        resultVO.setContent(content);
-                        list.add(resultVO);
-                    }
+                    String content = mInputTexts.get(id).getView()
+                            .getInputValue();
+                    resultVO.setContent(content);
+                    list.add(resultVO);
                 }
             }
         }

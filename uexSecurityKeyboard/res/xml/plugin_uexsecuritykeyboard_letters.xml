@@ -103,7 +103,7 @@
             android:codes="-5"
             android:isRepeatable="true"
             android:keyEdgeFlags="right"
-            android:keyIcon="@drawable/plugin_uexsecuritykeyboard_key_delete_pressed"
+            android:keyIcon="@drawable/plugin_uexsecuritykeyboard_key_delete"
             android:keyWidth="14.999998%p" />
     </Row>
     <Row android:rowEdgeFlags="bottom">
