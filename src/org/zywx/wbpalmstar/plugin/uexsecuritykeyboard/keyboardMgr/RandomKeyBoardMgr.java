@@ -2,17 +2,21 @@ package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.keyboardMgr;
 
 import java.util.Random;
 
+import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.InputStatusListener;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 /**
@@ -31,9 +35,8 @@ import android.widget.RelativeLayout;
  */
 public class RandomKeyBoardMgr extends KeyboardBaseMgr {
 
-    private static final String TAG = "RandomKeyBoardMgr";
-    // private LinearLayout keypad_num;
-    private Button[] btnFunctions = new Button[2];
+    private ImageButton btnFunDel;
+    private Button btnFunDone;
     private Button[] btnNumbs = new Button[10];
 
     // 数字按钮
@@ -56,11 +59,6 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
             EUExUtil.getResIdID(
                     "plugin_uexsecuritykeyboard_key_board_num_nine") };
 
-    // 功能按钮
-    private int[] keyFunctionIds = {
-            EUExUtil.getResIdID("plugin_uexsecuritykeyboard_btn_num_del"),
-            EUExUtil.getResIdID("plugin_uexsecuritykeyboard_btn_num_done") };
-
     /**
      * 用来初始化随机键盘管理器
      * 
@@ -79,49 +77,51 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
                 mInputStatusListener, listener, dataVO);
         // 获取控件对象
         isCustom = true;
-        findKeyBoardView(mParentView);
+        findKeyBoardView(null, mParentView);
         setEditTextListener(context, mEUExKeyboard, mParentView,
                 dataVO.getId());
     }
 
     /**
      * 初始化随机键盘的view
+     * 
+     * @param context
+     *            TODO
      */
-    private void findKeyBoardView(View keyboardView) {
+    @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
+    private void findKeyBoardView(Context context, View keyboardView) {
         View tempView = keyboardView;
         if (keyboardView.getParent() != null
                 && keyboardView.getParent().getParent() != null) {
             tempView = (View) keyboardView.getParent().getParent();
         }
-        // keypad_num = (LinearLayout) tempView
-        // .findViewById(EUExUtil.getResIdID("keyboard_view"));
         for (int i = 0; i < btnNumbs.length; i++) {
             btnNumbs[i] = (Button) tempView.findViewById(keyNumIds[i]);
             if (btnNumbs[i] != null) {
                 btnNumbs[i].setOnClickListener(keyBoardInputClickListener);
             }
         }
-
-        for (int i = 0; i < btnFunctions.length; i++) {
-            btnFunctions[i] = (Button) tempView.findViewById(keyFunctionIds[i]);
-            if (btnFunctions[i] != null) {
-                btnFunctions[i]
-                        .setOnClickListener(keyBoardFunctionClickListener);
+        tempView.findViewById(EUExUtil.getResIdID("done"))
+                .setVisibility(View.GONE);
+        btnFunDel = (ImageButton) tempView.findViewById(
+                EUExUtil.getResIdID("plugin_uexsecuritykeyboard_btn_num_del"));
+        btnFunDel.setOnClickListener(keyBoardFunctionClickListener);
+        btnFunDone = (Button) tempView.findViewById(
+                EUExUtil.getResIdID("plugin_uexsecuritykeyboard_btn_num_done"));
+        btnFunDone.setOnClickListener(keyBoardFunctionClickListener);
+        if (!dataVO.isHighlight()) {
+            Drawable drawable = ResoureFinder.getInstance(context)
+                    .getDrawable("plugin_uexsecuritykeyboard_kb_btn_normal");
+            for (int i = 0; i < btnNumbs.length; i++) {
+                btnNumbs[i] = (Button) tempView.findViewById(keyNumIds[i]);
+                if (btnNumbs[i] != null) {
+                    btnNumbs[i].setBackground(drawable);
+                }
             }
+            btnFunDel.setBackground(drawable);
+            btnFunDone.setBackground(drawable);
         }
-    }
-
-    /**
-     * 将密码替换成"*" dmq
-     */
-    StringBuffer replace;
-
-    public String replacePwd(String pwd) {
-        replace = new StringBuffer();
-        for (int i = 0; i < pwd.length(); i++) {
-            replace.append("*");
-        }
-        return replace.toString();
     }
 
     // 输入监听
@@ -137,10 +137,8 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
 
     // 功能监听
     private OnClickListener keyBoardFunctionClickListener = new OnClickListener() {
-
         @Override
         public void onClick(View v) {
-
             if (v.getId() == EUExUtil
                     .getResIdID("plugin_uexsecuritykeyboard_btn_num_del")) {
                 delValue();
@@ -159,31 +157,6 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
             EUExSecurityKeyboard mEUExKeyboard, View keyboardView) {
         randomKeyNum(context, keyboardView);
         keyboardView.setVisibility(View.VISIBLE);
-    }
-
-    // /**
-    // * 隐藏键盘视图
-    // */
-    // public void hideKeyboard(EUExSecurityKeyboard mEUExKeyboard,
-    // View keyboardView) {
-    // }
-
-    /**
-     * 键盘是否显示
-     * 
-     * @Description
-     * @return
-     * @author 孙靖
-     * @version 1.0 2013年12月29日
-     */
-    public boolean isKeyBoardShow() {
-        // if (null != relativeLayoutKeyBoard) {
-        // int visibility = relativeLayoutKeyBoard.getVisibility();
-        // if (visibility == View.VISIBLE) {
-        // return true;
-        // }
-        // }
-        return false;
     }
 
     /**

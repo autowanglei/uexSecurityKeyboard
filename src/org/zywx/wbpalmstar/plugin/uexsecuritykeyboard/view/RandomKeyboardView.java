@@ -11,15 +11,16 @@ import android.content.Context;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-public class RandomKeyboardView extends BaseFrameLayout {
+public class RandomKeyboardView extends KeyboardBaseView {
 
     public static final String TAG = "RandomKeyboardActivity";
 
-    public RandomKeyboardView(Context context, EUExSecurityKeyboard mKeyboard,
+    public RandomKeyboardView(Context context,
+            EUExSecurityKeyboard mEUExKeyboard,
             InputStatusListener mInputStatusListener,
             RelativeLayout.LayoutParams lp, OpenDataVO dataVO) {
-        super(context);
-        initView(context, mKeyboard, mInputStatusListener, lp, dataVO);
+        super(context, mEUExKeyboard);
+        initView(context, mEUExKeyboard, mInputStatusListener, lp, dataVO);
     }
 
     private void initView(Context context, EUExSecurityKeyboard mEUExKeyboard,

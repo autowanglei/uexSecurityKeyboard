@@ -9,16 +9,12 @@ import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import android.content.Context;
 import android.widget.RelativeLayout;
 
-public class SecKeyboardView extends BaseFrameLayout {
-
-    public SecKeyboardView(Context context) {
-        super(context);
-    }
+public class SecKeyboardView extends KeyboardBaseView {
 
     public SecKeyboardView(Context context, EUExSecurityKeyboard mEUExKeyboard,
             InputStatusListener mInputStatusListener,
             RelativeLayout.LayoutParams inputEditLp, OpenDataVO dataVO) {
-        super(context);
+        super(context, mEUExKeyboard);
         onCreate(context, mEUExKeyboard, mInputStatusListener, inputEditLp,
                 dataVO);
     }
@@ -30,6 +26,7 @@ public class SecKeyboardView extends BaseFrameLayout {
         if (!dataVO.isHighlight()) {
             resLayoutId = "plugin_uexsecuritykeyboard_keyboard_layout_no_click_effect";
         }
+
         RelativeLayout keyboardViewParent = setContentView(context, this,
                 EUExUtil.getResLayoutID(resLayoutId));
         mKeyboardBaseMgr = new SecKeyboardMgr(context, mEUExKeyboard,

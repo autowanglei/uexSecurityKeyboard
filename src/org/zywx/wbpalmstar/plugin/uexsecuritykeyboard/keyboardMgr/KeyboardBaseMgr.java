@@ -144,13 +144,16 @@ public class KeyboardBaseMgr {
      * @version 3.0 2014-8-1
      */
     protected void insertValue(String inputStr) {
-        inputValue = inputValue + inputStr;
-        if (!dataVO.isShowClearText()) {
-            inputStr = ConstantUtil.PASSWORD_STR;
+        if ((dataVO.getMaxInputLength() < 0)
+                || (mEditText.length() < dataVO.getMaxInputLength())) {
+            inputValue = inputValue + inputStr;
+            if (!dataVO.isShowClearText()) {
+                inputStr = ConstantUtil.PASSWORD_STR;
+            }
+            editTextShowValue = editTextShowValue + inputStr;
+            cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_TEXT);
+            updateEditText(editTextShowValue);
         }
-        editTextShowValue = editTextShowValue + inputStr;
-        cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_TEXT);
-        updateEditText(editTextShowValue);
     }
 
     /**
@@ -202,6 +205,14 @@ public class KeyboardBaseMgr {
     protected void cbKeyPressToWeb(int inputType) {
         if (!dataVO.isShowInputBox() && mEUExKeyboard != null) {
             mEUExKeyboard.onKeyPress(inputType);
+        }
+    }
+
+    public void onResume() {
+        if (dataVO.isCleanPassword()) {
+            inputValue = "";
+            editTextShowValue = "";
+            mEditText.setText(editTextShowValue);
         }
     }
 

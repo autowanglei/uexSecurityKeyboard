@@ -1,22 +1,22 @@
 package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util;
 
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.BaseFrameLayout;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.KeyboardBaseView;
 
 public class SeckeyboardData {
-    private BaseFrameLayout view;
+    private KeyboardBaseView view;
     private boolean isScrollWithWeb;
 
-    public SeckeyboardData(BaseFrameLayout view,
+    public SeckeyboardData(KeyboardBaseView view,
             boolean isScrollWithWeb) {
         this.view = view;
         this.isScrollWithWeb = isScrollWithWeb;
     }
 
-    public BaseFrameLayout getView() {
+    public KeyboardBaseView getView() {
         return view;
     }
 
-    public void setView(BaseFrameLayout view) {
+    public void setView(KeyboardBaseView view) {
         this.view = view;
     }
 

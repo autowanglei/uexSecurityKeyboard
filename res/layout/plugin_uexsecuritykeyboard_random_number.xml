@@ -113,12 +113,13 @@
             android:text="0" />
         
         <!-- 回退 -->
-        <Button
+        <ImageButton
             android:id="@+id/plugin_uexsecuritykeyboard_btn_num_del"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:background="@drawable/plugin_uexsecuritykeyboard_key_delete"/>
+            android:background="@drawable/plugin_uexsecuritykeyboard_btn_keyboard_key"
+            android:src="@drawable/plugin_uexsecuritykeyboard_key_delete"/>
     </LinearLayout>
 
 </LinearLayout>

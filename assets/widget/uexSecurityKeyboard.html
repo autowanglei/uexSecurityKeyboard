@@ -18,8 +18,8 @@
             isScrollWithWeb:true,
             keyboardDescription:"正益移动安全输入",
             showClearText:false,
-            showInputBox:false,
-            isHighlight:true,
+            showInputBox:true,
+            isHighlight:false,
             hintText:"全键盘"
         };
         var data = JSON.stringify(params);
@@ -39,6 +39,7 @@
             showInputBox:true,
             textSize:14,
             isHighlight:false,
+            isRandom:true,
             hintText:"数字键盘"
         };
         var data = JSON.stringify(params);
@@ -58,7 +59,10 @@
                 showClearText:true,
                 textSize:14,
                 isRandom:true,
-                isHighlight:false,
+                isHighlight:true,
+                isCleanPassword:true,
+                maxInputLength:6,
+                logoPath:"res://icon.png",
                 hintText:"随机数字键盘"
         };
         var data = JSON.stringify(params);
@@ -87,7 +91,7 @@
         alert('cbGetContent: '+info);
     }
     function onKeyPress(info){
-        alert('onKeyPress: '+info);
+//        alert('onKeyPress: '+info);
     }
     
     function onShowKeyboard(info){

@@ -17,6 +17,7 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private boolean showInputBox = true;
     private boolean isHighlight = true;
     private boolean isRandom = false;
+    private boolean isCleanPassword = false;
     private int maxInputLength = -1;
     private String hintText = "";
     private int textSize = -1;
@@ -24,6 +25,7 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private String hintTextColor;
     /** *输入框背景颜色 */
     private String backgroundColor;
+    private String logoPath;
 
     public int getX() {
         return (int) x;
@@ -159,5 +161,21 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
 
     public void setIsRandom(boolean isRandom) {
         this.isRandom = isRandom;
+    }
+
+    public boolean isCleanPassword() {
+        return isCleanPassword;
+    }
+
+    public void setCleanPassword(boolean isCleanPassWord) {
+        this.isCleanPassword = isCleanPassWord;
+    }
+
+    public String getLogoPath() {
+        return logoPath;
+    }
+
+    public void setLogoPath(String logoPath) {
+        this.logoPath = logoPath;
     }
 }

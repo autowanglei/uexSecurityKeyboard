@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +15,7 @@ import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.JsConst;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.SeckeyboardData;
-import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.BaseFrameLayout;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.KeyboardBaseView;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.RandomKeyboardView;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.view.SecKeyboardView;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
@@ -25,6 +27,7 @@ import android.content.Context;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.RelativeLayout;
@@ -75,7 +78,7 @@ public class EUExSecurityKeyboard extends EUExBase {
                 dataVO.getWidth(), dataVO.getHeight());
         inputEditLpRl.leftMargin = dataVO.getX();
         inputEditLpRl.topMargin = dataVO.getY();
-        BaseFrameLayout view = null;
+        KeyboardBaseView view = null;
         /** 乱序、数字键盘 */
         if (dataVO.isRandom() && (ConstantUtil.KEYBOARD_MODE_NUMBER == dataVO
                 .getKeyboardType())) {
@@ -87,25 +90,25 @@ public class EUExSecurityKeyboard extends EUExBase {
                     new InputStatusListener(dataVO.getId()), inputEditLpRl,
                     dataVO);
         }
-        // view.setOnInputStatusListener();
-        // if (!TextUtils.isEmpty(dataVO.getKeyboardDescription())) {
-        // view.setDescription(dataVO.getKeyboardDescription());
-        // }
+        addPluginViewToWeb(view, dataVO);
+        mInputTexts.put(id,
+                new SeckeyboardData(view, dataVO.isScrollWithWeb()));
+    }
 
+    private void addPluginViewToWeb(View view, OpenDataVO dataVO) {
+        String tag = TAG + dataVO.getId();
         if (dataVO.isScrollWithWeb()) {
             AbsoluteLayout.LayoutParams param = new AbsoluteLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT, 0, 0);
-            addViewToWebView(view, param, TAG + dataVO.getId());
+            addViewToWebView(view, param, tag);
         } else {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
             addViewToCurrentWindow(view, layoutParams);
         }
-        mInputTexts.put(id,
-                new SeckeyboardData(view, dataVO.isScrollWithWeb()));
-
+        addToWebViewsMap.put(tag, view);
     }
 
     public void close(String[] params) {
@@ -128,7 +131,7 @@ public class EUExSecurityKeyboard extends EUExBase {
                     if (mInputTexts.get(id).isScrollWithWeb()) {
                         removeViewFromWebView(TAG + id);
                     } else {
-                        BaseFrameLayout view = mInputTexts.get(id).getView();
+                        KeyboardBaseView view = mInputTexts.get(id).getView();
                         removeViewFromCurrentWindow(view);
                     }
                 }
@@ -137,12 +140,28 @@ public class EUExSecurityKeyboard extends EUExBase {
         }
     }
 
+    /** * 保存添加到网页的view */
+    private static Map<String, View> addToWebViewsMap = new HashMap<String, View>();
     private List<String> getAllListViewIds() {
         List<String> list = new ArrayList<String>();
         for (String s : mInputTexts.keySet()) {
             list.add(s);
         }
         return list;
+    }
+
+    public static void onActivityResume(Context context) {
+        Set<String> tagList = addToWebViewsMap.keySet();
+        for (String tag : tagList) {
+            onResume(tag);
+        }
+    }
+
+    private static void onResume(String viewTag) {
+        View removeView = addToWebViewsMap.get(viewTag);
+        if (removeView != null) {
+            ((KeyboardBaseView) removeView).onResume();
+        }
     }
 
     public void getContent(String[] params) {

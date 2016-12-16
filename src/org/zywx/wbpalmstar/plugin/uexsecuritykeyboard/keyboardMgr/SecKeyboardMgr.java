@@ -132,12 +132,7 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
             } else if (primaryCode == ConstantUtil.KEYCODE_CHANGE_LETTER) {// 字母切换
                 mKeyboardView.setKeyboard(letters);
             } else {
-                if ((maxInputLength < 0)
-                        || (editable.length() < dataVO.getMaxInputLength())) {
-                    insertValue(Character.toString((char) primaryCode));
-                    // editable.insert(start,
-                    // Character.toString((char) primaryCode));
-                }
+                insertValue(Character.toString((char) primaryCode));
             }
         }
     };
