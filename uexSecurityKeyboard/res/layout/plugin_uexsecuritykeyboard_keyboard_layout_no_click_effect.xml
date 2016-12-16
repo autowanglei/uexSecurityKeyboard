@@ -24,7 +24,7 @@
             android:layout_alignParentBottom="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:keyBackground="@drawable/plugin_uexsecuritykeyboard_btn_keyboard_key"
+            android:keyBackground="@drawable/plugin_uexsecuritykeyboard_kb_btn_normal"
             android:background="@color/plugin_uexsecuritykeyboard_keyboard_bg"
             android:keyTextColor="@color/white"
             />
@@ -34,16 +34,9 @@
             android:background="@color/plugin_uexsecuritykeyboard_keyboard_bg"
             android:padding="5dp"
             android:gravity="center"
-            android:orientation="horizontal"
             android:layout_above="@id/keyboard_view">
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_weight="1">
-	            <include
-	                layout="@layout/plugin_uexsecuritykeyboard_description" />
-            </LinearLayout>
+            <include
+                layout="@layout/plugin_uexsecuritykeyboard_description" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

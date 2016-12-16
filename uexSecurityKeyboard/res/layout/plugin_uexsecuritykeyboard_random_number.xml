@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="2dp" 
+    android:clickable="false"
+    android:orientation="vertical" 
+    android:weightSum="4">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:weightSum="3"
+        android:orientation="horizontal" >
+
+        <Button
+            android:layout_marginLeft="1dp"
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_one"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_btn_style"
+            android:text="1"  />
+
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_two"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_center_btn_style"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_three"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_btn_style"
+            android:layout_marginRight="1dp"
+            android:text="3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_four"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_btn_style"
+            android:layout_marginLeft="1dp"
+            android:text="4"  >
+        </Button>
+
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_five"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_center_btn_style"
+            android:text="5" >
+        </Button>
+
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_six"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_btn_style"
+            android:layout_marginRight="1dp"
+            android:text="6"  >
+        </Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_seven"
+            android:layout_marginLeft="1dp"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_btn_style"
+            android:text="7" >
+        </Button>
+
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_eight"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_center_btn_style"
+            android:text="8"  >
+        </Button>
+
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_nine"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_btn_style"
+            android:layout_marginRight="1dp"
+            android:text="9"  >
+        </Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <!-- 完成-->
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_btn_num_done"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/plugin_uexsecuritykeyboard_btn_keyboard_key"
+            android:text="@string/plugin_uexsecuritykeyboard_done"
+            android:visibility="visible"
+            android:textColor="@color/white"
+            android:textSize="@dimen/plugin_uexsecuritykeyboard_keyboard_key_text_size" />
+
+        <Button
+            android:id="@+id/plugin_uexsecuritykeyboard_key_board_num_zero"
+            style="@style/plugin_uexsecuritykeyboard_key_board_num_center_btn_style"
+            android:text="0" />
+        
+        <!-- 回退 -->
+        <ImageButton
+            android:id="@+id/plugin_uexsecuritykeyboard_btn_num_del"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/plugin_uexsecuritykeyboard_btn_keyboard_key"
+            android:src="@drawable/plugin_uexsecuritykeyboard_key_delete"/>
+    </LinearLayout>
+
+</LinearLayout>
