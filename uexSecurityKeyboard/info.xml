@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexSecurityKeyboard" version="3.0.1.12" build="2">
-        <info>2.12.修复点击键盘描述键盘收起的问题。</info>
+        uexName="uexSecurityKeyboard" version="3.0.1.15" build="2">
+        <info>2.12.修复点击键盘描述键盘收起的问题。
+                13.添加随机键盘完成按键的回调。
+                15.修复open已存在键盘的逻辑；与iOS保持一致，输入为空，点击删除，也给回调。</info>
         <build>2.6.修改插件输入框为透明。
                  9.增加设置输入框背景颜色、字体颜色、字号等功能。
                  10.添加显示键盘和键盘消失的监听方法。

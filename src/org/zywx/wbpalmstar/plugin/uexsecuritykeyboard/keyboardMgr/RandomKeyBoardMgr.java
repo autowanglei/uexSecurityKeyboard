@@ -144,8 +144,7 @@ public class RandomKeyBoardMgr extends KeyboardBaseMgr {
                 delValue();
             } else if (v.getId() == EUExUtil
                     .getResIdID("plugin_uexsecuritykeyboard_btn_num_done")) {
-                hideKeyboard(mEUExKeyboard, keyboardViewParent, dataVO.getId(),
-                        mInputStatusListener, true);
+                onKeyDonePress(mEUExKeyboard, keyboardViewParent);
             }
         }
     };

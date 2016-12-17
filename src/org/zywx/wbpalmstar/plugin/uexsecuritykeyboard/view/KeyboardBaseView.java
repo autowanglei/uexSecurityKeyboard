@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 public class KeyboardBaseView extends FrameLayout {
     protected EditText inputEditText;
-    protected KeyboardBaseMgr mKeyboardBaseMgr;
+    public KeyboardBaseMgr mKeyboardBaseMgr;
     protected EUExSecurityKeyboard mEUExKeyboard;
 
     public KeyboardBaseView(Context context,

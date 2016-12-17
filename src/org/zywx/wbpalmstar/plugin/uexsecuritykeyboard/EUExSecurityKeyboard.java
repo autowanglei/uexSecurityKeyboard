@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.zywx.wbpalmstar.engine.DataHelper;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.keyboardMgr.KeyboardBaseMgr;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.JsConst;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.SeckeyboardData;
@@ -71,28 +72,35 @@ public class EUExSecurityKeyboard extends EUExBase {
             return;
         }
         if (mInputTexts.containsKey(id)) {
-            return;
+            KeyboardBaseMgr mgr = mInputTexts.get(id)
+                    .getView().mKeyboardBaseMgr;
+            if (mgr != null) {
+                mgr.showKeyboard(mContext, mgr.mEUExKeyboard,
+                        mgr.keyboardViewParent, id);
+            }
+        } else {
+            RelativeLayout.LayoutParams inputEditLpRl = new RelativeLayout.LayoutParams(
+                    dataVO.getWidth(), dataVO.getHeight());
+            inputEditLpRl.leftMargin = dataVO.getX();
+            inputEditLpRl.topMargin = dataVO.getY();
+            KeyboardBaseView view = null;
+            /** 乱序、数字键盘 */
+            if (dataVO.isRandom()
+                    && (ConstantUtil.KEYBOARD_MODE_NUMBER == dataVO
+                            .getKeyboardType())) {
+                view = new RandomKeyboardView(mContext, this,
+                        new InputStatusListener(dataVO.getId()), inputEditLpRl,
+                        dataVO);
+            } else {
+                view = new SecKeyboardView(mContext, this,
+                        new InputStatusListener(dataVO.getId()), inputEditLpRl,
+                        dataVO);
+            }
+            addPluginViewToWeb(view, dataVO);
+            mInputTexts.put(id,
+                    new SeckeyboardData(view, dataVO.isScrollWithWeb()));
         }
 
-        RelativeLayout.LayoutParams inputEditLpRl = new RelativeLayout.LayoutParams(
-                dataVO.getWidth(), dataVO.getHeight());
-        inputEditLpRl.leftMargin = dataVO.getX();
-        inputEditLpRl.topMargin = dataVO.getY();
-        KeyboardBaseView view = null;
-        /** 乱序、数字键盘 */
-        if (dataVO.isRandom() && (ConstantUtil.KEYBOARD_MODE_NUMBER == dataVO
-                .getKeyboardType())) {
-            view = new RandomKeyboardView(mContext, this,
-                    new InputStatusListener(dataVO.getId()), inputEditLpRl,
-                    dataVO);
-        } else {
-            view = new SecKeyboardView(mContext, this,
-                    new InputStatusListener(dataVO.getId()), inputEditLpRl,
-                    dataVO);
-        }
-        addPluginViewToWeb(view, dataVO);
-        mInputTexts.put(id,
-                new SeckeyboardData(view, dataVO.isScrollWithWeb()));
     }
 
     private void addPluginViewToWeb(View view, OpenDataVO dataVO) {
@@ -142,6 +150,7 @@ public class EUExSecurityKeyboard extends EUExBase {
 
     /** * 保存添加到网页的view */
     private static Map<String, View> addToWebViewsMap = new HashMap<String, View>();
+
     private List<String> getAllListViewIds() {
         List<String> list = new ArrayList<String>();
         for (String s : mInputTexts.keySet()) {

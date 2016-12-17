@@ -169,18 +169,6 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
         }
     }
 
-    /**
-     * INPUT_TYPE_DONE，输入完成时，回调处理
-     */
-    private void onKeyDonePress(EUExSecurityKeyboard mEUExKeyboard,
-            View keyboardView) {
-        hideKeyboard(mEUExKeyboard, keyboardView, dataVO.getId(),
-                mInputStatusListener, true);
-        if (mEUExKeyboard != null) {
-            mEUExKeyboard.onKeyPress(ConstantUtil.INPUT_TYPE_DONE);
-        }
-    }
-
     private boolean isWord(String str) {
         String wordStr = "abcdefghijklmnopqrstuvwxyz";
         if (wordStr.contains(str.toLowerCase())) {

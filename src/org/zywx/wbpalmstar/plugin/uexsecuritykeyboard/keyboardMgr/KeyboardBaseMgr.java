@@ -19,8 +19,8 @@ import android.widget.RelativeLayout;
 
 public class KeyboardBaseMgr {
 
-    protected EUExSecurityKeyboard mEUExKeyboard;
-    protected RelativeLayout keyboardViewParent;
+    public EUExSecurityKeyboard mEUExKeyboard;
+    public RelativeLayout keyboardViewParent;
     protected EditText mEditText;
     protected boolean isCustom;
     protected InputMethodManager mImm;
@@ -168,7 +168,22 @@ public class KeyboardBaseMgr {
             editTextShowValue = editTextShowValue.substring(0,
                     editTextShowValue.length() - 1);
             updateEditText(editTextShowValue);
-            cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_DEL);
+            /** 银河证券逻辑，与iOS保持一致，即使没有输入内容，也给前端删除的回调，正常逻辑应该是有输入内容才给前端回调 */
+            // cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_DEL); //正确逻辑
+        }
+        /** 银河证券逻辑，与iOS保持一致，即使没有输入内容，也给前端删除的回调，正常逻辑应该是有输入内容才给前端回调 */
+        cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_DEL);// 银河证券逻辑，与iOS保持一致
+    }
+
+    /**
+     * INPUT_TYPE_DONE，输入完成时，回调处理
+     */
+    protected void onKeyDonePress(EUExSecurityKeyboard mEUExKeyboard,
+            View keyboardView) {
+        hideKeyboard(mEUExKeyboard, keyboardView, dataVO.getId(),
+                mInputStatusListener, true);
+        if (mEUExKeyboard != null) {
+            mEUExKeyboard.onKeyPress(ConstantUtil.INPUT_TYPE_DONE);
         }
     }
 
