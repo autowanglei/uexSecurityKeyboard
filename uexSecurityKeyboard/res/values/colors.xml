@@ -2,4 +2,5 @@
 <resources>
     <!--uexSecurityKeyboard-->
     <color name="plugin_uexsecuritykeyboard_keyboard_bg">#7D7D7D</color>
+    <color name="plugin_uexskb_description_text_color">#EEEEEE</color>
 </resources>

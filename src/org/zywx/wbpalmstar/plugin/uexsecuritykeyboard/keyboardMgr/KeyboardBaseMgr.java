@@ -168,6 +168,7 @@ public class KeyboardBaseMgr {
             editTextShowValue = editTextShowValue.substring(0,
                     editTextShowValue.length() - 1);
             updateEditText(editTextShowValue);
+            cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_DEL);
         }
     }
 

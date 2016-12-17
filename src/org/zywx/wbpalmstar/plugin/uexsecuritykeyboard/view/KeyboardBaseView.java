@@ -50,8 +50,8 @@ public class KeyboardBaseView extends FrameLayout {
 
     protected void createKeyboard(Context context,
             EUExSecurityKeyboard mEUExKeyboard, View keyboardView,
-            KeyboardBaseMgr keyboardMgr,
-            OpenDataVO dataVO, RelativeLayout.LayoutParams inputEditLp) {
+            KeyboardBaseMgr keyboardMgr, OpenDataVO dataVO,
+            RelativeLayout.LayoutParams inputEditLp) {
         configKeyboardDescription(context, keyboardView, dataVO);
         configInputEditText(context, mEUExKeyboard, keyboardView, keyboardMgr,
                 dataVO, inputEditLp);
@@ -59,6 +59,14 @@ public class KeyboardBaseView extends FrameLayout {
 
     private void configKeyboardDescription(Context context, View keyboardView,
             OpenDataVO dataVO) {
+        View descriptionLayout = keyboardView.findViewById(
+                EUExUtil.getResIdID("keyboard_description_layout"));
+        descriptionLayout.setClickable(false);
+        descriptionLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
         ImageView keyboardLogo = (ImageView) keyboardView
                 .findViewById(EUExUtil.getResIdID("keyboard_logo"));
         TextView mDescription = (TextView) keyboardView

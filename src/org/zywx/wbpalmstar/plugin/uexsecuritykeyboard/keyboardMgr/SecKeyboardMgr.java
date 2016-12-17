@@ -13,7 +13,6 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
-import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -30,7 +29,6 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
     private Keyboard symbols;// 符号键盘
     private Keyboard onlyNumbers;// 纯数字键盘
     private TextView mDone;// 完成
-    private int maxInputLength;
 
     public SecKeyboardMgr(final Context context,
             final EUExSecurityKeyboard mEUExKeyboard,
@@ -41,7 +39,6 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
         this.mContext = context;
         this.mEUExKeyboard = mEUExKeyboard;
         this.dataVO = dataVO;
-        this.maxInputLength = dataVO.getMaxInputLength();
         this.mKeyboardView = (KeyboardView) mParentView
                 .findViewById(EUExUtil.getResIdID("keyboard_view"));
         this.mDone = (TextView) mParentView
@@ -110,17 +107,18 @@ public class SecKeyboardMgr extends KeyboardBaseMgr
 
         @Override
         public void onKey(int primaryCode, int[] keyCodes) {
-            Editable editable = mEditText.getText();
-            int start = mEditText.getSelectionStart();
+            // Editable editable = mEditText.getText();
+            // int start = mEditText.getSelectionStart();
             if (primaryCode == Keyboard.KEYCODE_DONE) {
                 onKeyDonePress(mEUExKeyboard, keyboardViewParent);
             } else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
-                if (editable != null && editable.length() > 0) {
-                    if (start > 0) {
-                        editable.delete(start - 1, start);
-                    }
-                }
-                cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_DEL);
+                delValue();
+                // if (editable != null && editable.length() > 0) {
+                // if (start > 0) {
+                // editable.delete(start - 1, start);
+                // }
+                // }
+                // cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_DEL);
             } else if (primaryCode == Keyboard.KEYCODE_SHIFT) {// 大小写切换
                 changeKey();
                 mKeyboardView.setKeyboard(letters);
