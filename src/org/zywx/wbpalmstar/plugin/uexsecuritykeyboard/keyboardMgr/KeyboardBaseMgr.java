@@ -2,7 +2,10 @@ package org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.keyboardMgr;
 
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.EUExSecurityKeyboard;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.InputStatusListener;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.RC4.HexConverter;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.RC4.RC4Encryption;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.util.ConstantUtil;
+import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.InputVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.OpenDataVO;
 import org.zywx.wbpalmstar.plugin.uexsecuritykeyboard.vo.ResultVO;
 
@@ -27,8 +30,11 @@ public class KeyboardBaseMgr {
     protected InputStatusListener mInputStatusListener;
     protected KeyboardStatusListener mKeyboardStatusListener = null;
     protected OpenDataVO dataVO;
+    /** * RC4加密后的数据 */
     protected String inputValue = "";
-    protected String editTextShowValue = "";
+    protected int inputValues = 611008960;
+    protected String inputValuess = "13611008960";
+    // protected String editTextShowValue = "";
 
     public KeyboardBaseMgr(Context context, EUExSecurityKeyboard mEUExKeyboard,
             RelativeLayout keyboardViewParent, EditText mEditText,
@@ -138,22 +144,92 @@ public class KeyboardBaseMgr {
     }
 
     /**
-     * 更新输入的内容
+     * RC4加密
      * 
-     * @Description
-     * @version 3.0 2014-8-1
+     * @param value
+     *            要加密的字符串
+     * @return 加密后的字符串
      */
-    protected void insertValue(String inputStr) {
+    private String RC4Encrypt(String value) {
+        return HexConverter
+                .binaryToHexString(RC4Encryption.os_decrypt(value.getBytes(),
+                        value.getBytes().length, RC4Encryption.F_KEY));
+    }
+
+    /**
+     * RC4解密
+     * 
+     * @param value
+     *            要解密的字符串
+     * @return 解密后的字符串
+     */
+    private String RC4Decrypt(String value) {
+        byte[] valueByte = HexConverter.hexStringToBinary(value);
+        return new String(RC4Encryption.os_decrypt(valueByte, valueByte.length,
+                RC4Encryption.F_KEY));
+
+    }
+
+    /**
+     * 删除或输入数据的操作
+     * 
+     * @param srcValue
+     *            源字符串，密文
+     * @param action
+     *            删除或插入数据
+     * @param addValue
+     *            要添加的值，明文
+     * @return 明文
+     */
+    private InputVO handleValue(String srcValue, int action, String addValue) {
+        String clearText = "";
+        if (!TextUtils.isEmpty(srcValue)) {
+            clearText = RC4Decrypt(srcValue);
+        }
+        switch (action) {
+        case ConstantUtil.INPUT_ACTION_INSERT:
+            clearText += addValue;
+            break;
+        case ConstantUtil.INPUT_ACTION_DEL:
+            clearText = clearText.substring(0, clearText.length() - 1);
+            break;
+        default:
+            break;
+        }
+        return new InputVO(clearText, RC4Encrypt(clearText));
+    }
+
+    /**
+     * @param inputChar
+     *            输入的数据
+     */
+    protected void insertValue(String inputChar) {
         if ((dataVO.getMaxInputLength() < 0)
                 || (mEditText.length() < dataVO.getMaxInputLength())) {
-            inputValue = inputValue + inputStr;
+            InputVO inputVO = handleValue(inputValue,
+                    ConstantUtil.INPUT_ACTION_INSERT, inputChar);
+            inputValue = inputVO.getCiphertext();
+            String showText = inputVO.getClearText();
             if (!dataVO.isShowClearText()) {
-                inputStr = ConstantUtil.PASSWORD_STR;
+                showText = replacePwd(showText);
             }
-            editTextShowValue = editTextShowValue + inputStr;
             cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_TEXT);
-            updateEditText(editTextShowValue);
+            updateEditText(showText);
         }
+    }
+
+    /**
+     * 将明文替换成 ConstantUtil.PASSWORD_STR
+     * 
+     * @param text
+     * @return 与text等长的ConstantUtil.PASSWORD_STR
+     */
+    private String replacePwd(String text) {
+        StringBuffer replace = new StringBuffer();
+        for (int i = 0; i < text.length(); i++) {
+            replace.append(ConstantUtil.PASSWORD_STR);
+        }
+        return replace.toString();
     }
 
     /**
@@ -164,10 +240,14 @@ public class KeyboardBaseMgr {
      */
     protected void delValue() {
         if (inputValue.length() > 0) {
-            inputValue = inputValue.substring(0, inputValue.length() - 1);
-            editTextShowValue = editTextShowValue.substring(0,
-                    editTextShowValue.length() - 1);
-            updateEditText(editTextShowValue);
+            InputVO inputVO = handleValue(inputValue,
+                    ConstantUtil.INPUT_ACTION_DEL, "");
+            inputValue = inputVO.getCiphertext();
+            String showText = inputVO.getClearText();
+            if (!dataVO.isShowClearText()) {
+                showText = replacePwd(showText);
+            }
+            updateEditText(showText);
             /** 银河证券逻辑，与iOS保持一致，即使没有输入内容，也给前端删除的回调，正常逻辑应该是有输入内容才给前端回调 */
             // cbKeyPressToWeb(ConstantUtil.INPUT_TYPE_DEL); //正确逻辑
         }
@@ -190,11 +270,10 @@ public class KeyboardBaseMgr {
     /**
      * 清空内容
      */
-    protected void clear() {
+    private void clear() {
         if (!TextUtils.isEmpty(inputValue)) {
             inputValue = "";
-            editTextShowValue = "";
-            updateEditText(editTextShowValue);
+            updateEditText("");
         }
     }
 
@@ -204,7 +283,7 @@ public class KeyboardBaseMgr {
      * @return
      */
     public String getInputContent() {
-        return inputValue;
+        return RC4Decrypt(inputValue);
     }
 
     private void updateEditText(String text) {
@@ -226,9 +305,7 @@ public class KeyboardBaseMgr {
 
     public void onResume() {
         if (dataVO.isCleanPassword()) {
-            inputValue = "";
-            editTextShowValue = "";
-            mEditText.setText(editTextShowValue);
+            clear();
         }
     }
 
