@@ -57,6 +57,7 @@ android {
         release.setRoot('build-types/release')
 
         defaultConfig {
+            multiDexEnabled true
             minSdkVersion 14
         }
     }
