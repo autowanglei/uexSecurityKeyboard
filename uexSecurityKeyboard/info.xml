@@ -1,7 +1,8 @@
 ﻿﻿<?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexSecurityKeyboard" version="4.0.0" build="0">
-        <info>0:带安全键盘的输入框 4.0 插件</info>
+        uexName="uexSecurityKeyboard" version="4.0.1" build="1">
+        <info>1:增加自定义输入框样式、随机展示数字键盘等功能</info>
+        <build>0:带安全键盘的输入框 4.0 插件</build>
     </plugin>
 </uexplugins>

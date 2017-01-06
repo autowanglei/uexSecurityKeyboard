@@ -13,6 +13,19 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
     private int keyboardType = 0;
     private String keyboardDescription = "";
     private boolean isScrollWithWeb = false;
+    private boolean showClearText = true;
+    private boolean showInputBox = true;
+    private boolean isHighlight = true;
+    private boolean isRandom = false;
+    private boolean isCleanPassword = false;
+    private int maxInputLength = -1;
+    private String hintText = "";
+    private int textSize = -1;
+    private String textColor;
+    private String hintTextColor;
+    /** *输入框背景颜色 */
+    private String backgroundColor;
+    private String logoPath;
 
     public int getX() {
         return (int) x;
@@ -68,5 +81,101 @@ public class OpenDataVO extends DataBaseVO implements Serializable {
 
     public void setIsScrollWithWeb(boolean isScrollWithWeb) {
         this.isScrollWithWeb = isScrollWithWeb;
+    }
+
+    public boolean isShowClearText() {
+        return showClearText;
+    }
+
+    public void setShowClearText(boolean showClearText) {
+        this.showClearText = showClearText;
+    }
+
+    public boolean isShowInputBox() {
+        return showInputBox;
+    }
+
+    public void setShowInputBox(boolean showInputBox) {
+        this.showInputBox = showInputBox;
+    }
+
+    public int getMaxInputLength() {
+        return maxInputLength;
+    }
+
+    public void setMaxInputLength(int maxInputLength) {
+        this.maxInputLength = maxInputLength;
+    }
+
+    public String getHintText() {
+        return hintText;
+    }
+
+    public void setHintText(String hintText) {
+        this.hintText = hintText;
+    }
+
+    public int getTextSize() {
+        return textSize;
+    }
+
+    public String getTextColor() {
+        return textColor;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setTextSize(int textSize) {
+        this.textSize = textSize;
+    }
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public String getHintTextColor() {
+        return hintTextColor;
+    }
+
+    public void setHintTextColor(String hintTextColor) {
+        this.hintTextColor = hintTextColor;
+    }
+
+    public boolean isHighlight() {
+        return isHighlight;
+    }
+
+    public void setIsHighlight(boolean showClickEffect) {
+        this.isHighlight = showClickEffect;
+    }
+
+    public boolean isRandom() {
+        return isRandom;
+    }
+
+    public void setIsRandom(boolean isRandom) {
+        this.isRandom = isRandom;
+    }
+
+    public boolean isCleanPassword() {
+        return isCleanPassword;
+    }
+
+    public void setCleanPassword(boolean isCleanPassWord) {
+        this.isCleanPassword = isCleanPassWord;
+    }
+
+    public String getLogoPath() {
+        return logoPath;
+    }
+
+    public void setLogoPath(String logoPath) {
+        this.logoPath = logoPath;
     }
 }

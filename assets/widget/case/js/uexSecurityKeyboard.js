@@ -9,7 +9,12 @@ if (UNIT_TEST) {
                 height:150,
                 keyboardType:0,
                 isScrollWithWeb:true,
-                keyboardDescription:"正益移动安全输入"
+                keyboardDescription:"正益移动安全输入",
+                showInputBox:true,
+                textSize:14,
+                isHighlight:false,
+                isRandom:true,
+                hintText:"随机数字键盘"
             }
             securityKeyboard = uexSecurityKeyboard.open(param);
             UNIT_TEST.log("securityKeyboard:" + securityKeyboard);

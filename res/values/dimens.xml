@@ -11,5 +11,7 @@
 
     <!--plugin_uexSecurityKeyboard_-->
     <dimen name="plugin_uexsecuritykeyboard_key_height">50dp</dimen>
-
+    <dimen name="plugin_uexsecuritykeyboard_keyboard_key_text_size">18sp</dimen>
+    <dimen name="plugin_uexsecuritykeyboard_keyboard_description_text_size">16sp</dimen>
+    <dimen name="plugin_uexsecuritykeyboard_keyboard_description_done_btn_size">16sp</dimen>
 </resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/password_edit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        android:id="@+id/keyboard_view_parent"
+        >
+        
+	    <LinearLayout
+	        android:id="@+id/keyboard_view"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:focusable="true"
+	        android:focusableInTouchMode="true"
+            android:background="@color/plugin_uexsecuritykeyboard_keyboard_bg"
+            android:keyTextColor="@color/white"
+	        android:orientation="vertical">
+	
+	        <include layout="@layout/plugin_uexsecuritykeyboard_random_number" />
+	    </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/plugin_uexsecuritykeyboard_keyboard_bg"
+            android:padding="5dp"
+            android:gravity="center"
+            android:layout_above="@id/keyboard_view">
+            <include
+                layout="@layout/plugin_uexsecuritykeyboard_description" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
